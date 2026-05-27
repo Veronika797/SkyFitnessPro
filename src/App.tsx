@@ -9,6 +9,7 @@ import { LoginModal } from "./components/modals/LoginModal";
 import { RegisterModal } from "./components/modals/RegisterModal";
 import "./global.css";
 import { Profile } from "./pages/Profile/Profile";
+import { WorkoutPage } from "./pages/WorkoutPage/WorkoutPage";
 
 const AppContent: React.FC = () => {
   const {
@@ -41,6 +42,14 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute requireAuth={true}>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/workout/:workoutId"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <WorkoutPage />
             </ProtectedRoute>
           }
         />

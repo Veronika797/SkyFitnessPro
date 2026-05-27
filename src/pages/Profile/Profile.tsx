@@ -7,6 +7,7 @@ import {
   removeUserCourse,
   getCourseProgress,
   CourseProgress,
+  getCourseWorkouts,
 } from "../../api/courseService";
 import styles from "./Profile.module.css";
 
@@ -85,8 +86,22 @@ export const Profile: React.FC = () => {
     logout();
     navigate("/");
   };
-  const handleStartCourse = (courseId: string) => {
-    navigate(`/courses/${courseId}`);
+
+  const handleStartCourse = async (courseId: string) => {
+    try {
+      const workouts = await getCourseWorkouts(courseId);
+
+      if (workouts && workouts.length > 0) {
+        navigate(`/courses/${courseId}/workout/${workouts[0]._id}`);
+      } else {
+        alert("Тренировки для этого курса пока не доступны");
+        navigate(`/courses/${courseId}`);
+      }
+    } catch (err: any) {
+      console.error("Ошибка получения тренировок:", err);
+      alert("Не удалось загрузить тренировки");
+      navigate(`/courses/${courseId}`);
+    }
   };
 
   const handleRemoveCourse = async (courseId: string) => {
@@ -113,11 +128,11 @@ export const Profile: React.FC = () => {
 
   const getCourseImage = (name: string) =>
     ({
-      Йога: "/img/skillcard1.png",
-      Стретчинг: "/img/skillcard2.png",
-      Фитнес: "/img/skillcard3.png",
-      "Степ-аэробика": "/img/skillcard4.png",
-      Бодифлекс: "/img/skillcard5.png",
+      Йога: "/img/Maskgroup.png",
+      Стретчинг: "/img/Maskgroup1.png",
+      Фитнес: "/img/Maskgroup2.png",
+      "Степ-аэробика": "/img/Maskgroup3.png",
+      Бодифлекс: "/img/Maskgroup4.png",
     })[name] || "/img/placeholder.png";
 
   if (loading)
@@ -191,8 +206,9 @@ export const Profile: React.FC = () => {
                   <button
                     className={styles.removeButton}
                     onClick={() => handleRemoveCourse(course._id)}
+                    aria-label="Удалить курс"
                   >
-                    ×
+                    −<span className={styles.tooltip}>Удалить курс</span>
                   </button>
                 </div>
                 <div className={styles.courseContent}>

@@ -32,6 +32,10 @@ export const Header: React.FC<HeaderProps> = ({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,7 +60,11 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className={styles.header}>
-      <div className={styles.logoBlock}>
+      <div
+        className={styles.logoBlock}
+        onClick={handleLogoClick}
+        style={{ cursor: "pointer" }}
+      >
         <div className={styles.logoTop}>
           <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
           <span className="logoSvg">

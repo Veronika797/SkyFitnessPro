@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CardsGrid.module.css";
 import { useNavigate } from "react-router-dom";
-import { getAllCourses, Course } from "../../api/courseService";
+import {
+  getAllCourses,
+  getUserCourseIds,
+  addCourseToUser,
+  removeUserCourse,
+  Course,
+} from "../../api/courseService";
+import { useAuth } from "../../context/AuthContext";
 
 const COURSE_COLORS: Record<string, string> = {
   Йога: styles.bgYoga,
@@ -21,7 +28,9 @@ const COURSE_IMAGES: Record<string, string> = {
 
 export const CardsGrid: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
+  const [addedCourses, setAddedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,6 +38,11 @@ export const CardsGrid: React.FC = () => {
       try {
         const data = await getAllCourses();
         setCourses(data);
+
+        if (user) {
+          const userCourseIds = await getUserCourseIds();
+          setAddedCourses(new Set(userCourseIds));
+        }
       } catch (err) {
         console.error("Ошибка загрузки курсов:", err);
       } finally {
@@ -36,22 +50,34 @@ export const CardsGrid: React.FC = () => {
       }
     };
     fetchCourses();
-  }, []);
+  }, [user]);
 
-  const handleAddClick = (
+  const handleAddClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
-    _courseId: string,
+    courseId: string,
   ) => {
     e.stopPropagation();
-    const btn = e.currentTarget;
 
-    btn.style.background = "#7fff00";
-    btn.textContent = "✓";
+    if (!user) {
+      navigate("/login", { state: { from: { pathname: "/" } } });
+      return;
+    }
 
-    setTimeout(() => {
-      btn.style.background = "#fff";
-      btn.textContent = "+";
-    }, 1500);
+    try {
+      if (addedCourses.has(courseId)) {
+        await removeUserCourse(courseId);
+        setAddedCourses((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(courseId);
+          return newSet;
+        });
+      } else {
+        await addCourseToUser(courseId);
+        setAddedCourses((prev) => new Set([...prev, courseId]));
+      }
+    } catch (err: any) {
+      alert("Ошибка: " + (err.response?.data?.message || "Попробуйте снова"));
+    }
   };
 
   const handleCardClick = (courseId: string) => {
@@ -70,8 +96,8 @@ export const CardsGrid: React.FC = () => {
     <div className={styles.cardsGrid}>
       {courses.map((course) => {
         const bgColor = COURSE_COLORS[course.nameRU] || "";
-        const imageSrc =
-          COURSE_IMAGES[course.nameRU] || "./img/placeholder.png";
+        const imageSrc = COURSE_IMAGES[course.nameRU] || "/img/placeholder.png";
+        const isAdded = addedCourses.has(course._id);
 
         return (
           <div
@@ -79,16 +105,28 @@ export const CardsGrid: React.FC = () => {
             className={styles.cardWrapper}
             onClick={() => handleCardClick(course._id)}
           >
-            <button
-              className={`${styles.cardAddBtn} ${bgColor}`}
-              aria-label={`Добавить ${course.nameRU} в избранное`}
-              onClick={(e) => handleAddClick(e, course._id)}
-            >
-              +<span className={styles.tooltip}>Добавить курс</span>
-            </button>
-
             <div className={styles.card}>
               <div className={`${styles.cardImage} ${bgColor}`}>
+                <button
+                  className={`${styles.cardAddBtn} ${isAdded ? styles.added : ""}`}
+                  aria-label={isAdded ? "Удалить курс" : "Добавить курс"}
+                  onClick={(e) => handleAddClick(e, course._id)}
+                >
+                  {isAdded ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                        fill="white"
+                      />
+                    </svg>
+                  ) : (
+                    "+"
+                  )}
+                  <span className={styles.tooltip}>
+                    {isAdded ? "Удалить курс" : "Добавить курс"}
+                  </span>
+                </button>
+
                 <img src={imageSrc} alt={course.nameRU} />
               </div>
 

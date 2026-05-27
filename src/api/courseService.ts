@@ -13,6 +13,19 @@ export interface Course {
   dailyDurationInMinutes: { from: number; to: number };
 }
 
+export interface Exercise {
+  _id: string;
+  name: string;
+  quantity: number;
+}
+
+export interface Workout {
+  _id: string;
+  name: string;
+  video: string;
+  exercises: Exercise[];
+}
+
 export interface WorkoutProgress {
   workoutId: string;
   workoutCompleted: boolean;
@@ -74,6 +87,20 @@ export const getCourseProgress = async (
   const response = await axiosInstance.get<CourseProgress>(
     `/users/me/progress?courseId=${courseId}`,
   );
+  return response.data;
+};
+
+export const getCourseWorkouts = async (
+  courseId: string,
+): Promise<Workout[]> => {
+  const response = await axiosInstance.get<Workout[]>(
+    `/courses/${courseId}/workouts`,
+  );
+  return response.data;
+};
+
+export const getWorkoutById = async (workoutId: string): Promise<Workout> => {
+  const response = await axiosInstance.get<Workout>(`/workouts/${workoutId}`);
   return response.data;
 };
 

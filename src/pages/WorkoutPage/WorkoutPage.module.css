@@ -1,0 +1,223 @@
+.workoutPage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.backButton {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 1);
+  border-radius: 46px;
+  padding: 10px 24px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 1);
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+}
+
+.backButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.courseTitle {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 110%;
+  color: rgba(0, 0, 0, 1);
+  margin: 0;
+}
+
+.videoSection {
+  margin-bottom: 40px;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.videoFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+}
+
+.exercisesSection {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+}
+
+.sectionTitle {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 110%;
+  color: rgba(0, 0, 0, 1);
+  margin-bottom: 32px;
+}
+
+.exercisesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.exerciseCard {
+  background: rgba(247, 247, 247, 1);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.exerciseName {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 1);
+  margin: 0 0 16px 0;
+}
+
+.exerciseInput {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.exerciseInput label {
+  flex: 1;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: rgba(100, 100, 100, 1);
+}
+
+.progressInput {
+  width: 80px;
+  padding: 8px 12px;
+  border: 1px solid rgba(208, 206, 206, 1);
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  text-align: center;
+}
+
+.progressInput:focus {
+  outline: none;
+  border-color: rgba(111, 214, 0, 1);
+}
+
+.exerciseTarget {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: rgba(100, 100, 100, 1);
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(240, 240, 240, 1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(188, 236, 48, 1),
+    rgba(111, 214, 0, 1)
+  );
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.saveButton {
+  width: 100%;
+  background: rgba(188, 236, 48, 1);
+  border: none;
+  border-radius: 46px;
+  padding: 18px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 1);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: rgba(111, 214, 0, 1);
+  transform: translateY(-2px);
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  color: #666;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #bcec30;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .workoutPage {
+    padding: 20px 16px;
+  }
+
+  .courseTitle {
+    font-size: 32px;
+  }
+
+  .exercisesSection {
+    padding: 24px;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+  }
+
+  .exercisesGrid {
+    grid-template-columns: 1fr;
+  }
+}
