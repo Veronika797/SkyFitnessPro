@@ -5,36 +5,25 @@ import styles from "./login.module.css";
 
 interface LoginModalProps {
   onClose: () => void;
-  onSwitchToRegister: () => void;
 }
 
 const getLoginErrorMessage = (error: string | null): string | null => {
   if (!error) return null;
-
-  if (error.includes("Неверный пароль")) {
+  if (error.includes("Неверный пароль"))
     return "Пароль введен неверно, попробуйте еще раз.";
-  }
-
-  if (error.includes("Пользователь с таким email не найден")) {
+  if (error.includes("Пользователь с таким email не найден"))
     return "Пользователь с такой почтой не найден. Зарегистрируйтесь?";
-  }
-
-  if (error.includes("уже существует")) {
+  if (error.includes("уже существует"))
     return "Данная почта уже используется. Попробуйте войти.";
-  }
-
   return "Произошла ошибка. Проверьте данные и попробуйте снова.";
 };
 
-export const LoginModal: React.FC<LoginModalProps> = ({
-  onClose,
-  onSwitchToRegister,
-}) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
 
-  const { login, error: authError } = useAuth();
+  const { login, error: authError, openRegisterModal } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,11 +37,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       setFormError("Заполните все поля");
       return;
     }
-
     try {
       await login(email, password);
       onClose();
-      navigate(from, { replace: true });
+      const { returnTo } = useAuth();
+      if (returnTo) {
+        window.location.href = returnTo;
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {}
   };
 
@@ -66,7 +59,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.logoTop}>
-          <img src="./img/Logo.png" alt="logo" className={styles.logoIcon} />
+          <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
           <span className={styles.logoText}>SkyFitnessPro</span>
         </div>
 
@@ -114,7 +107,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <button
             className={styles.btnReg}
             type="button"
-            onClick={onSwitchToRegister}
+            onClick={() => {
+              onClose();
+              setTimeout(openRegisterModal, 100);
+            }}
           >
             Зарегистрироваться
           </button>

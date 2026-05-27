@@ -6,45 +6,15 @@ import styles from "./login.module.css";
 
 interface RegisterModalProps {
   onClose: () => void;
-  onSwitchToLogin: () => void;
 }
 
-const getRegisterErrorMessage = (error: string | null): string | null => {
-  if (!error) return null;
-
-  if (error.includes("Введите корректный Email")) {
-    return "Введите корректный Email, например: user@example.com";
-  }
-
-  if (error.includes("Пользователь с таким email уже существует")) {
-    return "Данная почта уже используется. Попробуйте войти.";
-  }
-
-  if (error.includes("не менее 6 символов")) {
-    return "Пароль должен содержать не менее 6 символов.";
-  }
-
-  if (error.includes("не менее 2 спецсимволов")) {
-    return "Пароль должен содержать не менее 2 спецсимволов (например, @, !, #).";
-  }
-
-  if (error.includes("заглавную букву")) {
-    return "Пароль должен содержать хотя бы одну заглавную букву (A–Я).";
-  }
-
-  return "Произошла ошибка при регистрации. Проверьте данные и попробуйте снова.";
-};
-
-export const RegisterModal: React.FC<RegisterModalProps> = ({
-  onClose,
-  onSwitchToLogin,
-}) => {
+export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const { register, error: authError } = useAuth();
+  const { register, error: authError, openLoginModal } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,8 +39,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     } catch {}
   };
 
-  const backendMessage = getRegisterErrorMessage(authError);
-  const allErrors = [...errors, ...(backendMessage ? [backendMessage] : [])];
+  const backendMessage = authError ? [authError] : [];
+  const allErrors = [...errors, ...backendMessage];
 
   return (
     <div className={styles.authPage} onClick={onClose}>
@@ -80,14 +50,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.logoTop}>
-          <img src="./img/Logo.png" alt="logo" className={styles.logoIcon} />
+          <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
           <span className={styles.logoText}>SkyFitnessPro</span>
         </div>
 
         {allErrors.length > 0 && (
           <div className={styles.errorMessage}>
             {allErrors.map((err, i) => (
-              <div key={i}> {err}</div>
+              <div key={i}>• {err}</div>
             ))}
           </div>
         )}
@@ -146,7 +116,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <button
             className={styles.btnReg}
             type="button"
-            onClick={onSwitchToLogin}
+            onClick={() => {
+              onClose();
+              setTimeout(openLoginModal, 100);
+            }}
           >
             Войти
           </button>

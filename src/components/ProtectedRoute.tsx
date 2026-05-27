@@ -4,9 +4,13 @@ import { useAuth } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requireAuth?: boolean;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requireAuth = true,
+}) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
 
@@ -14,7 +18,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <div className="loading">Загрузка...</div>;
   }
 
-  if (!user) {
+  if (requireAuth && !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

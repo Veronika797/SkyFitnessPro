@@ -64,9 +64,24 @@
   padding-left: 18px;
   opacity: 1;
   border: 1px solid rgba(208, 206, 206, 1);
-  color: rgba(208, 206, 206, 1);
+  color: rgba(0, 0, 0, 1);
   font-size: 18px;
   transition: border-color 0.2s;
+}
+
+.formGroup input::placeholder {
+  color: rgba(208, 206, 206, 1);
+  opacity: 1;
+}
+
+.formGroup input::-webkit-input-placeholder {
+  color: rgba(208, 206, 206, 1);
+}
+.formGroup input::-moz-placeholder {
+  color: rgba(208, 206, 206, 1);
+}
+.formGroup input:-ms-input-placeholder {
+  color: rgba(208, 206, 206, 1);
 }
 
 .formGroup input:focus {

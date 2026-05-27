@@ -58,9 +58,9 @@ export const Header: React.FC<HeaderProps> = ({
     <header className={styles.header}>
       <div className={styles.logoBlock}>
         <div className={styles.logoTop}>
-          <img src="./img/Logo.png" alt="logo" className={styles.logoIcon} />
+          <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
           <span className="logoSvg">
-            <img src="/public/img/SkyFitnessPro.svg" alt="logo" />
+            <img src="/img/SkyFitnessPro.svg" alt="logo" />
           </span>
         </div>
         <p className={styles.tagline}>Онлайн-тренировки для занятий дома</p>
@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={toggleDropdown}
               aria-label="Открыть профиль"
             >
-              <img src="/public/img/profile.png" alt="user" />
+              <img src="/img/profile.png" alt="user" />
 
               <span className={styles.profileName}>{getUserName()}</span>
               <svg
