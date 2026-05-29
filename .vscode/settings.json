@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": false,
+  "prettier.requireConfig": true,
+  "files.autoSave": "onFocusChange"
+}

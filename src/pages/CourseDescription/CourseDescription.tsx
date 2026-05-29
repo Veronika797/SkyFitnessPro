@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import {
-  getCourseById,
-  addCourseToUser,
-  Course,
-} from "../../api/courseService";
+import { useAuth } from "@/context/AuthContext";
+import { getCourseById, addCourseToUser } from "@/api/courseService";
+import { Course } from "@/types";
 import styles from "./CourseDescription.module.css";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/utils/errorUtils";
 
 const COURSE_IMAGES: Record<string, string> = {
   Йога: "/img/skillcard1.png",
@@ -33,8 +32,8 @@ export const CourseDescription: React.FC = () => {
         setLoading(true);
         const data = await getCourseById(id);
         setCourse(data);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Не удалось загрузить курс");
+      } catch (err) {
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -48,12 +47,9 @@ export const CourseDescription: React.FC = () => {
       try {
         setAdding(true);
         await addCourseToUser(id!);
-        alert("Курс добавлен в ваш профиль!");
-      } catch (err: any) {
-        alert(
-          "Ошибка: " +
-            (err.response?.data?.message || "Не удалось добавить курс"),
-        );
+        toast.success("Курс добавлен в ваш профиль!");
+      } catch (err) {
+        setError(getErrorMessage(err));
       } finally {
         setAdding(false);
       }
@@ -148,16 +144,8 @@ export const CourseDescription: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <button
-              className={styles.newBodyButton}
-              onClick={handleActionClick}
-              disabled={adding}
-            >
-              {adding
-                ? "Добавление..."
-                : user
-                  ? "Добавить курс"
-                  : "Войдите, чтобы добавить курс"}
+            <button className={styles.newBodyButton} onClick={handleActionClick} disabled={adding}>
+              {adding ? "Добавление..." : user ? "Добавить курс" : "Войдите, чтобы добавить курс"}
             </button>
           </div>
         </div>

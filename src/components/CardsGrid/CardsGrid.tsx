@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CardsGrid.module.css";
 import { useNavigate } from "react-router-dom";
-import {
-  getAllCourses,
-  getUserCourseIds,
-  addCourseToUser,
-  removeUserCourse,
-  Course,
-} from "../../api/courseService";
-import { useAuth } from "../../context/AuthContext";
+import { getAllCourses, addCourseToUser, removeUserCourse } from "@/api/courseService";
+import { Course } from "@/types";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/utils/errorUtils";
 
 const COURSE_COLORS: Record<string, string> = {
   Йога: styles.bgYoga,
@@ -28,10 +25,11 @@ const COURSE_IMAGES: Record<string, string> = {
 
 export const CardsGrid: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, addCourseLocally, removeCourseLocally } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [addedCourses, setAddedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -40,11 +38,11 @@ export const CardsGrid: React.FC = () => {
         setCourses(data);
 
         if (user) {
-          const userCourseIds = await getUserCourseIds();
+          const userCourseIds = await Promise.resolve(user.selectedCourses);
           setAddedCourses(new Set(userCourseIds));
         }
-      } catch (err) {
-        console.error("Ошибка загрузки курсов:", err);
+      } catch (_err) {
+        setError("Не удалось загрузить курсы");
       } finally {
         setLoading(false);
       }
@@ -52,10 +50,13 @@ export const CardsGrid: React.FC = () => {
     fetchCourses();
   }, [user]);
 
-  const handleAddClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    courseId: string,
-  ) => {
+  useEffect(() => {
+    if (user) {
+      setAddedCourses(new Set(user.selectedCourses));
+    }
+  }, [user]);
+
+  const handleAddClick = async (e: React.MouseEvent<HTMLButtonElement>, courseId: string) => {
     e.stopPropagation();
 
     if (!user) {
@@ -66,17 +67,21 @@ export const CardsGrid: React.FC = () => {
     try {
       if (addedCourses.has(courseId)) {
         await removeUserCourse(courseId);
+        removeCourseLocally(courseId);
         setAddedCourses((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(courseId);
-          return newSet;
+          const next = new Set(prev);
+          next.delete(courseId);
+          return next;
         });
+        toast.info("Курс удалён");
       } else {
         await addCourseToUser(courseId);
+        addCourseLocally(courseId);
         setAddedCourses((prev) => new Set([...prev, courseId]));
+        toast.success("Курс добавлен!");
       }
-    } catch (err: any) {
-      alert("Ошибка: " + (err.response?.data?.message || "Попробуйте снова"));
+    } catch (err) {
+      setError(getErrorMessage(err));
     }
   };
 
@@ -88,6 +93,17 @@ export const CardsGrid: React.FC = () => {
     return (
       <div className={styles.loading}>
         <p>Загрузка курсов...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.error}>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()} className={styles.retryBtn}>
+          Попробовать снова
+        </button>
       </div>
     );
   }
@@ -114,10 +130,7 @@ export const CardsGrid: React.FC = () => {
                 >
                   {isAdded ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                        fill="white"
-                      />
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white" />
                     </svg>
                   ) : (
                     "+"
@@ -140,8 +153,7 @@ export const CardsGrid: React.FC = () => {
                   </div>
                   <div className={styles.cardInfoItem}>
                     <img src="./img/Time.png" alt="time" />
-                    {course.dailyDurationInMinutes.from}-
-                    {course.dailyDurationInMinutes.to} мин/день
+                    {course.dailyDurationInMinutes.from}-{course.dailyDurationInMinutes.to} мин/день
                   </div>
                 </div>
 

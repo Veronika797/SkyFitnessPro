@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { validatePassword } from "../../utils/validatePassword";
+import { useAuth } from "@/context/AuthContext";
+import { validatePassword } from "@/utils/validatePassword";
 import styles from "./login.module.css";
+import { getErrorMessage } from "@/utils/errorUtils";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -36,7 +37,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
       await register(email, password);
       onClose();
       navigate("/", { replace: true });
-    } catch {}
+    } catch (err) {
+      setErrors([getErrorMessage(err)]);
+    }
   };
 
   const backendMessage = authError ? [authError] : [];

@@ -5,7 +5,6 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
@@ -24,7 +23,6 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("jwt_token");
-      window.location.href = "/login";
     }
     return Promise.reject(error);
   },

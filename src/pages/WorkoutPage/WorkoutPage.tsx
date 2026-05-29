@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import {
   getCourseById,
+  getWorkoutById,
   getCourseProgress,
   saveWorkoutProgress,
-  Course,
-  CourseProgress,
-  getWorkoutById,
-} from "../../api/courseService";
+} from "@/api/courseService";
+import { Course, Workout, CourseProgress } from "@/types";
+import { ProgressModal } from "@/components/modals/ProgressModal/ProgressModal";
 import styles from "./WorkoutPage.module.css";
-
-interface Exercise {
-  _id: string;
-  name: string;
-  quantity: number;
-}
-
-interface Workout {
-  _id: string;
-  name: string;
-  video: string; // YouTube URL
-  exercises: Exercise[];
-}
+import { toast } from "react-toastify";
+import { SuccessModal } from "@/components/modals/SuccessModal/SuccessModal";
+import { getErrorMessage } from "@/utils/errorUtils";
 
 export const WorkoutPage: React.FC = () => {
   const { courseId, workoutId } = useParams<{
@@ -31,7 +21,8 @@ export const WorkoutPage: React.FC = () => {
   }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-
+  const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [course, setCourse] = useState<Course | null>(null);
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [progress, setProgress] = useState<number[]>([]);
@@ -61,23 +52,24 @@ export const WorkoutPage: React.FC = () => {
 
         if (user) {
           try {
-            const courseProgress: CourseProgress =
-              await getCourseProgress(courseId);
+            const courseProgress: CourseProgress = await getCourseProgress(courseId);
+
             const workoutProgress = courseProgress.workoutsProgress?.find(
               (w) => w.workoutId === workoutId,
             );
-            if (workoutProgress && workoutProgress.progressData) {
+
+            if (
+              workoutProgress?.progressData &&
+              workoutProgress.progressData.length === workoutData.exercises.length
+            ) {
               setProgress(workoutProgress.progressData);
             }
           } catch (err) {
-            console.error("Не удалось загрузить прогресс:", err);
+            toast.error("Не удалось загрузить прогресс: " + getErrorMessage(err));
           }
         }
-      } catch (err: any) {
-        console.error("Ошибка загрузки данных:", err);
-        setError(
-          err.response?.data?.message || "Не удалось загрузить тренировку",
-        );
+      } catch (err) {
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -86,26 +78,24 @@ export const WorkoutPage: React.FC = () => {
     fetchData();
   }, [courseId, workoutId, user]);
 
-  const handleProgressChange = (index: number, value: number) => {
-    const newProgress = [...progress];
-    newProgress[index] = Math.max(0, value);
-    setProgress(newProgress);
-  };
-
-  const handleSaveProgress = async () => {
-    if (!courseId || !workoutId) return;
+  const handleSaveProgress = async (userProgress: Record<string, number>) => {
+    if (!courseId || !workoutId || !workout) return;
 
     try {
       setSaving(true);
-      await saveWorkoutProgress(courseId, workoutId, progress);
-      alert("Прогресс сохранён!");
-    } catch (err: any) {
-      alert(
-        "Ошибка при сохранении: " +
-          (err.response?.data?.message || "Попробуйте снова"),
-      );
+
+      const newProgress = workout.exercises.map((ex) => {
+        return userProgress[ex._id] || 0;
+      });
+      setProgress(newProgress);
+
+      await saveWorkoutProgress(courseId, workoutId, newProgress);
+      setIsSuccessModalOpen(true);
+    } catch (err) {
+      toast.error("Ошибка при сохранении: " + getErrorMessage(err));
     } finally {
       setSaving(false);
+      setIsProgressModalOpen(false);
     }
   };
 
@@ -118,14 +108,11 @@ export const WorkoutPage: React.FC = () => {
     );
   }
 
-  if (!workout || !course) {
+  if (error || !workout || !course) {
     return (
       <div className={styles.error}>
-        <h2>Тренировка не найдена</h2>
-        <button
-          onClick={() => navigate("/profile")}
-          className={styles.backButton}
-        >
+        <h2>{error || "Тренировка не найдена"}</h2>
+        <button onClick={() => navigate("/profile")} className={styles.backButton}>
           ← Вернуться в профиль
         </button>
       </div>
@@ -135,10 +122,7 @@ export const WorkoutPage: React.FC = () => {
   return (
     <div className={styles.workoutPage}>
       <div className={styles.header}>
-        <button
-          onClick={() => navigate("/profile")}
-          className={styles.backButton}
-        >
+        <button onClick={() => navigate("/profile")} className={styles.backButton}>
           ← Назад к курсам
         </button>
         <h1 className={styles.courseTitle}>{course.nameRU}</h1>
@@ -156,52 +140,56 @@ export const WorkoutPage: React.FC = () => {
           />
         </div>
       </div>
-
       <div className={styles.exercisesSection}>
-        <h2 className={styles.sectionTitle}>{workout.name}</h2>
+        <h2 className={styles.sectionTitle}>{workout.name || "Упражнения тренировки"}</h2>
 
         <div className={styles.exercisesGrid}>
-          {workout.exercises.map((exercise, index) => (
-            <div key={exercise._id} className={styles.exerciseCard}>
-              <h3 className={styles.exerciseName}>{exercise.name}</h3>
-              <div className={styles.exerciseInput}>
-                <label>
-                  Выполнено повторений:
-                  <input
-                    type="number"
-                    min="0"
-                    max={exercise.quantity}
-                    value={progress[index] || 0}
-                    onChange={(e) =>
-                      handleProgressChange(index, parseInt(e.target.value) || 0)
-                    }
-                    className={styles.progressInput}
+          {workout.exercises.map((exercise, index) => {
+            const currentProgress = progress[index] || 0;
+            const progressPercent =
+              exercise.quantity > 0
+                ? Math.min((currentProgress / exercise.quantity) * 100, 100)
+                : 0;
+
+            return (
+              <div key={exercise._id} className={styles.exerciseCard}>
+                <h3
+                  className={styles.exerciseName}
+                  data-percent={`${Math.round(progressPercent)}%`}
+                >
+                  {exercise.name}
+                </h3>
+
+                <div className={styles.miniProgressBar}>
+                  <div
+                    className={styles.miniProgressFill}
+                    style={{ width: `${progressPercent}%` }}
                   />
-                </label>
-                <span className={styles.exerciseTarget}>
-                  / {exercise.quantity}
-                </span>
+                </div>
               </div>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressFill}
-                  style={{
-                    width: `${exercise.quantity > 0 ? ((progress[index] || 0) / exercise.quantity) * 100 : 0}%`,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <button
           className={styles.saveButton}
-          onClick={handleSaveProgress}
+          onClick={() => setIsProgressModalOpen(true)}
           disabled={saving}
         >
-          {saving ? "Сохранение..." : "Заполнить свой прогресс"}
+          {saving ? "Сохранение..." : "Обновить свой прогресс"}
         </button>
       </div>
+
+      {isProgressModalOpen && workout && (
+        <ProgressModal
+          exercises={workout.exercises}
+          courseName={course!.nameRU}
+          onClose={() => setIsProgressModalOpen(false)}
+          onSave={handleSaveProgress}
+        />
+      )}
+
+      {isSuccessModalOpen && <SuccessModal onClose={() => setIsSuccessModalOpen(false)} />}
     </div>
   );
 };

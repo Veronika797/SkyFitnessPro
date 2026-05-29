@@ -1,7 +1,7 @@
 .workoutPage {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 0px 20px 40px 20px;
 }
 
 .header {
@@ -19,7 +19,7 @@
   color: rgba(0, 0, 0, 1);
   cursor: pointer;
   transition: all 0.3s;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .backButton:hover {
@@ -58,109 +58,97 @@
   border-radius: 24px;
 }
 
+.miniProgressBar {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  margin: 8px 0 16px;
+  overflow: hidden;
+}
+
+.miniProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #bcec30, #6fd600);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
 .exercisesSection {
   background: rgba(255, 255, 255, 1);
-  border-radius: 30px;
-  padding: 40px;
+  border-radius: 24px;
+  padding: 32px;
   box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+  margin-top: 32px;
 }
 
 .sectionTitle {
   font-family: "Roboto", sans-serif;
   font-weight: 600;
-  font-size: 32px;
-  line-height: 110%;
+  font-size: 24px;
   color: rgba(0, 0, 0, 1);
-  margin-bottom: 32px;
+  margin: 0 0 24px;
 }
 
 .exercisesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-bottom: 32px;
 }
 
 .exerciseCard {
-  background: rgba(247, 247, 247, 1);
-  border-radius: 16px;
-  padding: 24px;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .exerciseName {
-  font-family: "Roboto", sans-serif;
-  font-weight: 600;
-  font-size: 20px;
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 110%;
+  letter-spacing: 0px;
   color: rgba(0, 0, 0, 1);
-  margin: 0 0 16px 0;
-}
-
-.exerciseInput {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 8px;
 }
 
-.exerciseInput label {
-  flex: 1;
-  font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  color: rgba(100, 100, 100, 1);
+.exerciseName::after {
+  content: attr(data-percent);
 }
 
-.progressInput {
-  width: 80px;
-  padding: 8px 12px;
-  border: 1px solid rgba(208, 206, 206, 1);
-  border-radius: 8px;
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  text-align: center;
-}
-
-.progressInput:focus {
-  outline: none;
-  border-color: rgba(111, 214, 0, 1);
-}
-
-.exerciseTarget {
-  font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  color: rgba(100, 100, 100, 1);
-}
-
-.progressBar {
-  width: 100%;
+.miniProgressBar {
+  width: 320px;
   height: 6px;
-  background: rgba(240, 240, 240, 1);
-  border-radius: 3px;
-  overflow: hidden;
+  border-radius: 50px;
+  opacity: 1;
+  background: rgba(247, 247, 247, 1);
 }
 
-.progressFill {
+.miniProgressFill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(188, 236, 48, 1),
-    rgba(111, 214, 0, 1)
-  );
-  border-radius: 3px;
+  background: linear-gradient(90deg, #00d9ff, #7fff00);
+  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
 .saveButton {
   width: 100%;
+  max-width: 300px;
   background: rgba(188, 236, 48, 1);
   border: none;
   border-radius: 46px;
-  padding: 18px;
+  padding: 16px 32px;
   font-family: "Roboto", sans-serif;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   color: rgba(0, 0, 0, 1);
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 16px;
 }
 
 .saveButton:hover:not(:disabled) {
