@@ -35,7 +35,7 @@
   margin-top: 20px;
   padding: 12px 24px;
   background: #bc7f30;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 24px;
   font-size: 16px;
@@ -59,7 +59,14 @@
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: cover;
 }
+
+.bgYoga { background-image: url("/img/skillcard1.png"); }
+.bgStretching { background-image: url("/img/skillcard2.png"); }
+.bgFitness { background-image: url("/img/skillcard3.png"); }
+.bgStep { background-image: url("/img/skillcard4.png"); }
+.bgBodyflex { background-image: url("/img/skillcard5.png"); }
 
 .newBodySection {
   background: rgba(255, 255, 255, 1);
@@ -289,7 +296,7 @@
 }
 
 .actionSection {
-  background: white;
+  background: #fff;
   border-radius: 24px;
   padding: 40px;
   margin-top: 40px;
@@ -351,6 +358,17 @@
     height: 250px;
     margin: 20px 0 0 0;
   }
+
+  .headerBackground {
+  background-position: left;
+  background-size: auto;
+}
+
+  .bgYoga { background-image: url("/img/Maskgroup.png"); }
+  .bgStretching { background-image: url("/img/Maskgroup1.png"); }
+  .bgFitness { background-image: url("/img/Maskgroup2.png"); } 
+  .bgStep { background-image: url("/img/Maskgroup3.png"); }
+  .bgBodyflex { background-image: url("/img/Maskgroup4.png"); }
 
   .metaInfo {
     gap: 16px;

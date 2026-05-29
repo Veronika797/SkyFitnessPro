@@ -60,7 +60,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         {allErrors.length > 0 && (
           <div className={styles.errorMessage}>
             {allErrors.map((err, i) => (
-              <div key={i}>• {err}</div>
+              <div key={i} data-testid="error-message">
+                • {err}
+              </div>
             ))}
           </div>
         )}

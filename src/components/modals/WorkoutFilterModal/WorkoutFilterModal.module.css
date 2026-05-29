@@ -144,7 +144,6 @@
   padding: 16px 24px 24px;
   text-align: center;
   background: #fff;
-  border-top: 1px solid #f0f0f0;
 }
 
 .startButton {
@@ -152,7 +151,7 @@
   max-width: 320px;
   padding: 14px 24px;
   background-color: rgba(188, 236, 48, 1);
-  color: white;
+  color: #fff;
   font-family: "Roboto", sans-serif;
   font-weight: 600;
   font-size: 16px;
@@ -204,7 +203,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
+  color: #fff;
   font-weight: bold;
   font-size: 14px;
 }
@@ -247,7 +246,7 @@
 .checkboxInput:checked .checkboxVisual::after {
   content: "✓";
   font-size: 14px;
-  color: white;
+  color: #fff;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -279,4 +278,15 @@
 .arrowIcon {
   color: #646464;
   flex-shrink: 0;
+}
+
+@media (max-width: 426px) {
+ 
+.modalOverlay {
+  right: auto;
+}
+  .closeButton {
+    top: 4px;
+    right: 4px;
+  }
 }

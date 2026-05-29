@@ -7,12 +7,12 @@ import styles from "./CourseDescription.module.css";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@/utils/errorUtils";
 
-const COURSE_IMAGES: Record<string, string> = {
-  Йога: "/img/skillcard1.png",
-  Стретчинг: "/img/skillcard2.png",
-  Фитнес: "/img/skillcard3.png",
-  "Степ-аэробика": "/img/skillcard4.png",
-  Бодифлекс: "/img/skillcard5.png",
+const BG_CLASSES: Record<string, string> = {
+  Йога: styles.bgYoga,
+  Стретчинг: styles.bgStretching,
+  Фитнес: styles.bgFitness,
+  "Степ-аэробика": styles.bgStep,
+  Бодифлекс: styles.bgBodyflex,
 };
 
 export const CourseDescription: React.FC = () => {
@@ -79,7 +79,7 @@ export const CourseDescription: React.FC = () => {
     );
   }
 
-  const courseImage = COURSE_IMAGES[course.nameRU] || "/img/placeholder.svg";
+  const bgClass = BG_CLASSES[course.nameRU] || "";
 
   const benefits = [
     "проработка всех групп мышц",
@@ -92,12 +92,7 @@ export const CourseDescription: React.FC = () => {
   return (
     <div className={styles.coursePage}>
       <div className={styles.header}>
-        <div
-          className={styles.headerBackground}
-          style={{
-            backgroundImage: `url(${courseImage})`,
-          }}
-        />
+        <div className={`${styles.headerBackground} ${bgClass}`} />
       </div>
 
       {course.fitting?.length > 0 && (

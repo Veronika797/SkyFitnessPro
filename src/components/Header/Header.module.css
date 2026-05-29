@@ -235,6 +235,10 @@
 }
 
 @media (max-width: 768px) {
+.header {
+      padding: 20px;
+}
+
   .profileButton {
     padding: 6px 8px;
   }
@@ -242,6 +246,10 @@
   .profileName {
     display: none;
   }
+
+.tagline {
+  display: none;
+}
 
   .dropdownMenu {
     right: -10px;

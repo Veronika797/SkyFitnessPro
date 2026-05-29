@@ -55,6 +55,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
         onSubmit={handleSubmit}
         className={styles.authForm}
         onClick={(e) => e.stopPropagation()}
+        aria-label="Форма входа"
       >
         <div className={styles.logoTop}>
           <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />

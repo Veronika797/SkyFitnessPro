@@ -203,7 +203,6 @@
   border: 0.5px solid rgba(0, 0, 0, 1);
   z-index: 1000;
   opacity: 0;
-  /* visibility: hidden; */
   transition: all 0.2s ease;
   pointer-events: none;
 }
@@ -356,7 +355,6 @@
   height: 6px;
   background: #f0f0f0;
   border-radius: 3px;
-  /* overflow: hidden; */
 }
 .progressFill {
   height: 100%;
@@ -428,9 +426,10 @@
     font-size: 32px;
   }
   .userCard {
-    flex-direction: column;
+    /* flex-direction: column;
     text-align: center;
-    padding: 30px 20px;
+    padding: 30px 20px; */
+    display: none;
   }
   .userName {
     font-size: 28px;
@@ -441,7 +440,5 @@
   .coursesGrid {
     grid-template-columns: 1fr;
   }
-  .courseImageWrapper {
-    height: 200px;
-  }
+ 
 }
