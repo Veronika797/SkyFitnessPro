@@ -21,7 +21,7 @@ export const useCourseProgress = () => {
       let completedReps = 0;
 
       const workoutPromises = course.workouts.map((workoutId) =>
-        getWorkoutById(workoutId).catch(() => null),
+        getWorkoutById(courseId, workoutId).catch(() => null),
       );
       const workouts = (await Promise.all(workoutPromises)).filter((w): w is Workout => w !== null);
 

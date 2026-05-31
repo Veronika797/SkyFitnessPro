@@ -12,7 +12,7 @@
 }
 
 .heroTitle {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 60px;
   line-height: 100%;
@@ -26,7 +26,7 @@
   display: flex;
   border-radius: 5px;
   gap: 10px;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 32px;
   line-height: 110%;
@@ -75,13 +75,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
   .heroTitle {
-    font-weight: 400;
-    font-size: 51px;
+       font-weight: 500;
+    font-size: 48px;
     line-height: 80%;
     letter-spacing: 1px;
   }
     .heroBadge {
-   font-size: 27px;
+   font-size: 24px;
   }
 }
 
@@ -129,4 +129,40 @@
     top: 3%;
     right: 3%;
   }
+}
+
+@media (max-width: 450px) {
+  .heroTitle {
+    font-weight: 500;
+    font-size: 22px;
+  }
+
+  .heroContent {
+    margin-bottom: 30px;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .cardContent {
+    padding: 18px;
+  }
+
+  .cardTitle {
+    margin-bottom: 10px;
+  }
+
+  .cardInfo {
+        gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .cardGrid {
+    margin-bottom: 20px;
+  }
+
+  .loginBtn {
+        width: 83px;
+}
 }

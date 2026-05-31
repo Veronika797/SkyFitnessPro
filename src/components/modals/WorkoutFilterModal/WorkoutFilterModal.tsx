@@ -28,7 +28,7 @@ export const WorkoutFilterModal: React.FC<WorkoutFilterModalProps> = ({
 
     workoutsToGroup.forEach((workout) => {
       const match = workout.name.match(/(День|Day)\s+(\d+)/i);
-      const dayKey = match ? `День ${match[2]}` : "Другие";
+      const dayKey = match ? `День ${match[2]}` : "";
 
       if (!groups[dayKey]) {
         groups[dayKey] = [];
@@ -43,7 +43,6 @@ export const WorkoutFilterModal: React.FC<WorkoutFilterModalProps> = ({
 
   const handleSelect = (workoutId: string) => {
     setSelectedWorkoutId(workoutId);
-    onSelect(workoutId);
   };
 
   const handleStart = () => {
@@ -109,7 +108,11 @@ export const WorkoutFilterModal: React.FC<WorkoutFilterModalProps> = ({
           )}
         </div>
         <div className={styles.modalFooter}>
-          <button className={styles.startButton} onClick={handleStart}>
+          <button
+            className={styles.startButton}
+            onClick={handleStart}
+            disabled={!selectedWorkoutId}
+          >
             Начать
           </button>
         </div>

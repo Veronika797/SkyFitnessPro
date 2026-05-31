@@ -30,6 +30,7 @@ export const CardsGrid: React.FC = () => {
   const [addedCourses, setAddedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -58,9 +59,20 @@ export const CardsGrid: React.FC = () => {
 
   const handleAddClick = async (e: React.MouseEvent<HTMLButtonElement>, courseId: string) => {
     e.stopPropagation();
+    e.preventDefault();
 
     if (!user) {
-      navigate("/login", { state: { from: { pathname: "/" } } });
+      toast.info("Войдите, чтобы добавить курс", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setTimeout(() => {
+        navigate("/login", { state: { from: { pathname: "/" } } });
+      }, 800);
       return;
     }
 
@@ -89,6 +101,9 @@ export const CardsGrid: React.FC = () => {
     navigate(`/courses/${courseId}`);
   };
 
+  const showTooltip = (courseId: string) => setTooltipVisible(courseId);
+  const hideTooltip = () => setTooltipVisible(null);
+
   if (loading) {
     return (
       <div className={styles.loading}>
@@ -114,12 +129,16 @@ export const CardsGrid: React.FC = () => {
         const bgColor = COURSE_COLORS[course.nameRU] || "";
         const imageSrc = COURSE_IMAGES[course.nameRU] || "/img/placeholder.png";
         const isAdded = addedCourses.has(course._id);
+        const isTooltipVisible = tooltipVisible === course._id;
 
         return (
           <div
             key={course._id}
             className={styles.cardWrapper}
             onClick={() => handleCardClick(course._id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && handleCardClick(course._id)}
           >
             <div className={styles.card}>
               <div className={`${styles.cardImage} ${bgColor}`}>
@@ -127,6 +146,10 @@ export const CardsGrid: React.FC = () => {
                   className={`${styles.cardAddBtn} ${isAdded ? styles.added : ""}`}
                   aria-label={isAdded ? "Удалить курс" : "Добавить курс"}
                   onClick={(e) => handleAddClick(e, course._id)}
+                  onMouseEnter={() => showTooltip(course._id)}
+                  onMouseLeave={hideTooltip}
+                  onFocus={() => showTooltip(course._id)}
+                  onBlur={hideTooltip}
                 >
                   {isAdded ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -135,9 +158,11 @@ export const CardsGrid: React.FC = () => {
                   ) : (
                     "+"
                   )}
-                  <span className={styles.tooltip}>
-                    {isAdded ? "Удалить курс" : "Добавить курс"}
-                  </span>
+                  {isTooltipVisible && (
+                    <span className={`${styles.tooltip} ${isTooltipVisible ? styles.visible : ""}`}>
+                      {isAdded ? "Удалить курс" : "Добавить курс"}
+                    </span>
+                  )}
                 </button>
 
                 <img src={imageSrc} alt={course.nameRU} />

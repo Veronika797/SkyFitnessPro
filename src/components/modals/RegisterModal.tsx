@@ -1,9 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { validatePassword } from "@/utils/validatePassword";
 import styles from "./login.module.css";
-import { getErrorMessage } from "@/utils/errorUtils";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -13,37 +10,57 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [formError, setFormError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { register, error: authError, openLoginModal } = useAuth();
-  const navigate = useNavigate();
+  const { register, error: authError, clearError, openLoginModal } = useAuth();
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  const errorMessage = formError || authError;
+
+  useEffect(() => {
+    if (errorMessage && emailRef.current) {
+      emailRef.current.focus();
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors([]);
+    setFormError("");
 
+    if (!email || !password || !confirmPassword) {
+      setFormError("Заполните все поля");
+      return;
+    }
     if (password !== confirmPassword) {
-      setErrors(["Пароли не совпадают"]);
+      setFormError("Пароли не совпадают");
+      return;
+    }
+    if (password.length < 6) {
+      setFormError("Пароль должен содержать минимум 6 символов");
       return;
     }
 
-    const validation = validatePassword(password);
-    if (!validation.isValid) {
-      setErrors(validation.errors);
-      return;
-    }
-
+    setIsLoading(true);
     try {
       await register(email, password);
       onClose();
-      navigate("/", { replace: true });
-    } catch (err) {
-      setErrors([getErrorMessage(err)]);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      if (message.includes("уже существует")) {
+        setFormError("Этот email уже зарегистрирован. Попробуйте войти.");
+      } else {
+        setFormError(message || "Ошибка регистрации");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const backendMessage = authError ? [authError] : [];
-  const allErrors = [...errors, ...backendMessage];
+  const clearAllErrors = () => {
+    setFormError("");
+    clearError();
+  };
 
   return (
     <div className={styles.authPage} onClick={onClose}>
@@ -53,31 +70,31 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.logoTop}>
-          <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
-          <span className={styles.logoText}>SkyFitnessPro</span>
+          <img src="/img/logo.png" alt="logo" className={styles.logoIcon} />
         </div>
 
-        {allErrors.length > 0 && (
-          <div className={styles.errorMessage}>
-            {allErrors.map((err, i) => (
-              <div key={i} data-testid="error-message">
-                • {err}
-              </div>
-            ))}
+        {errorMessage && (
+          <div className={styles.errorMessage} role="alert">
+            {errorMessage}
           </div>
         )}
 
         <div className={styles.formGroup}>
           <label htmlFor="reg-email"></label>
           <input
+            ref={emailRef}
             id="reg-email"
             name="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              clearAllErrors();
+            }}
             required
             placeholder="Эл. почта"
             autoComplete="email"
+            aria-invalid={!!errorMessage}
           />
         </div>
 
@@ -88,10 +105,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
             name="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              clearAllErrors();
+            }}
             required
             placeholder="Пароль"
             autoComplete="new-password"
+            aria-invalid={!!errorMessage}
           />
         </div>
 
@@ -102,10 +123,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
             name="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              clearAllErrors();
+            }}
             required
             placeholder="Повторите пароль"
             autoComplete="new-password"
+            aria-invalid={!!errorMessage}
           />
         </div>
 
@@ -113,15 +138,16 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
           <button
             className={styles.btnLog}
             type="submit"
-            disabled={!email || !password || !confirmPassword}
+            disabled={isLoading || !email || !password || !confirmPassword}
           >
-            Зарегистрироваться
+            {isLoading ? "Регистрация..." : "Зарегистрироваться"}
           </button>
 
           <button
             className={styles.btnReg}
             type="button"
             onClick={() => {
+              clearAllErrors();
               onClose();
               setTimeout(openLoginModal, 100);
             }}

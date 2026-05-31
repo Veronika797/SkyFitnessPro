@@ -59,7 +59,17 @@
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+}
+
+.courseTitle {
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .bgYoga { background-image: url("/img/skillcard1.png"); }
@@ -69,9 +79,10 @@
 .bgBodyflex { background-image: url("/img/skillcard5.png"); }
 
 .newBodySection {
+  height: 510px;
   background: rgba(255, 255, 255, 1);
   border-radius: 30px;
-  padding: 60px;
+  padding: 30px;
   margin-top: 102px;
   margin-bottom: 40px;
   box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
@@ -79,15 +90,67 @@
   gap: 60px;
   align-items: center;
   justify-content: space-between;
+
+    overflow: visible;
+  position: relative;
+}
+
+.sectionClip {
+  position: absolute;
+  inset: 0; 
+  border-radius: 30px; 
+  overflow: hidden; 
+  pointer-events: none;
+  z-index: 1;
 }
 
 .newBodyContent {
   flex: 1;
   max-width: 600px;
+    position: relative;
+  z-index: 2; 
+}
+
+.newBodyImageWrapper {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+   align-self: flex-end;
+  margin-top: auto;
+    top: -140px; 
+    z-index: 3;
+}
+
+  .shoulderAccent {
+    position: absolute;
+    width: 122px;
+    height: 23px;
+    top: 140px;
+    right: 312px;
+    transform: rotate(-40deg);
+    z-index: 4;
+    pointer-events: none;
+}
+.runnerImage {
+  height: 590px;
+  object-fit: contain;
+}
+
+.arrowOverlay {
+width: 660px;
+    height: 749px;
+    position: absolute;
+    transform: rotate(-1deg);
+    right: 8px;
+    top: -8%;
 }
 
 .newBodyTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 60px;
   line-height: 100%;
@@ -103,7 +166,7 @@
 }
 
 .benefitItem {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 24px;
   line-height: 110%;
@@ -135,7 +198,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
 }
 
 .newBodyButton:hover:not(:disabled) {
@@ -148,22 +211,8 @@
   cursor: not-allowed;
 }
 
-.newBodyImage {
-  flex: 1;
-  max-width: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.newBodyImage img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
 .sectionTitle {
-  font-family: Roboto;
+  font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 40px;
   line-height: 110.1%;
@@ -254,7 +303,7 @@
 }
 
 .reasonNumber {
-  font-family: Roboto;
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 75px;
   line-height: 135%;
@@ -263,7 +312,7 @@
 }
 
 .reasonText {
-  font-family: Roboto;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 24px;
   line-height: 110%;
@@ -330,7 +379,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
 }
 
 .actionButton:hover:not(:disabled) {
@@ -343,7 +392,66 @@
   cursor: wait;
 }
 
+@media (max-width: 1024px) {
+  .coursePage {
+        width: 940px;
+  }
+
+  .newBodySection {
+    overflow: hidden;
+  }
+
+  .headerBackground {
+    background-size: contain;
+  } 
+  
+  .newBodyImageWrapper {
+    top: 0;
+    margin-top: 30px;
+    align-self: center;
+  }
+
+  .reasonsGrid {
+    display: flex;
+  }
+
+  .loginBtn {
+        width: 153px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  .newBodyTitle {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .newBodyButton {
+        height: 60px;
+    width: 320px;
+    font-size: 15px;
+  }
+
+  .benefitItem {
+        font-size: 20px;
+  }
+
+  .arrowOverlay {
+        width: 600px;
+    height: 688px;
+    opacity: 0.5;
+    right: 43px;
+    top: 15%;
+  }
+}
+
+
 @media (max-width: 768px) {
+.coursePage {
+    background-position: center;
+    background-size: contain;
+}
+
   .header {
     flex-direction: column;
     padding: 30px;
@@ -360,8 +468,8 @@
   }
 
   .headerBackground {
-  background-position: left;
-  background-size: auto;
+    background-position: center;
+    background-size: contain;
 }
 
   .bgYoga { background-image: url("/img/Maskgroup.png"); }
@@ -374,10 +482,12 @@
     gap: 16px;
   }
 
-  .reasonsGrid,
-  .directionsContainer {
-    grid-template-columns: 1fr;
+  .reasonsGrid {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
   }
+
 
   .actionSection {
     padding: 30px 20px;
@@ -385,5 +495,211 @@
 
   .actionTitle {
     font-size: 24px;
+  }
+
+  .runnerImage {
+    height: 313px;
+  }
+
+  .arrowOverlay {
+       width: 300px;
+        height: 325px;
+        opacity: 0.5;
+        right: 29px;
+        top: 37%;
+  }
+
+   .shoulderAccent {
+    width: 123px;
+    height: 15px;
+    top: 76px;
+    right: 223px;
+   }
+  
+  .shoulderAccent path {
+    stroke-width: 6 !important; 
+  }
+}
+
+
+
+@media (max-width: 426px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  .header {
+  padding: 0;
+  margin-bottom: 25px;
+}
+
+ .arrowOverlay {
+    position: absolute;
+    transform: rotate(0deg);
+     width: 393px;
+    height: 303px;
+    top: -87px;
+     left: 22px;
+  }
+
+  
+  .section {
+    display: flex;
+    flex-direction: column;
+    max-width: 399px;
+  }
+
+  .coursePage {
+    position: relative;
+    width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .section {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .newBodySection {
+    position: relative;
+    z-index: 0;
+    height: auto;
+    padding: 24px 16px;
+    margin-top: 150px;
+    margin-bottom: 40px;
+    flex-direction: column;
+    gap: 24px;
+    overflow: visible;
+    border-radius: 24px;
+    background: transparent; 
+    box-shadow: none;    
+  }
+
+  .newBodySection::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 24px;
+    box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+    z-index: 3; 
+    pointer-events: none;
+  }
+
+  .newBodyImageWrapper {
+     position: absolute;
+        right: -107px;
+        top: -241px;
+        width: auto;
+        height: auto;
+        z-index: 2;
+        margin: 0;
+        pointer-events: none;
+  }
+
+  .shoulderAccent {
+    position: absolute;
+    width: 35px;
+    height: 23px;
+    top: 72px;
+    right: 238px;
+    transform: rotate(-40deg);
+    z-index: 4;
+    pointer-events: none;
+}
+
+.shoulderAccent path {
+    stroke-width: 6 !important; 
+  }
+
+  .runnerImage {
+  width: 388px;
+   height: 328px;
+   object-fit: contain;
+   display: block;
+  }
+
+  .sectionClip {
+   position: absolute;
+    top: -50px; 
+    left: -50px; 
+    right: -50px; 
+    bottom: -50px; 
+    width: auto;   
+    height: auto;   
+    pointer-events: none;
+    z-index: 1; 
+    overflow: visible; 
+  }
+
+
+  .newBodyContent {
+    position: relative;
+    z-index: 4; 
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .newBodyTitle {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .benefitItem {
+    font-size: 16px;
+    padding-left: 20px;
+  }
+
+  .newBodyButton {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    display: block;
+    font-size: 16px;
+    padding: 14px 24px;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .reasonsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 15px;
+  }
+
+  .reasonCard {
+    width: 343px;
+    height: 141px;
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .reasonNumber {
+    font-size: 48px;
+  }
+
+  .reasonText {
+    font-size: 18px;
+    font-size: 18px;
+    width: 235px;
+  }
+
+  .directionsContainer {
+    width: 100%;
+    padding: 20px 25px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .headerBackground {
+    border-radius: 45px;
+    background-position: center;
+    background-size: cover;
   }
 }

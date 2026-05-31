@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { WorkoutFilterModal } from "@/components/modals/WorkoutFilterModal/WorkoutFilterModal";
@@ -20,6 +20,7 @@ const getCourseImage = (name: string) =>
 export const Profile: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
   const {
     userCourses,
     loading,
@@ -64,7 +65,6 @@ export const Profile: React.FC = () => {
   return (
     <div className={styles.profilePage}>
       <h1 className={styles.pageTitle}>Профиль</h1>
-
       <div className={styles.userCard}>
         <div className={styles.userAvatar}>
           <div className={styles.avatarStack}>
@@ -83,7 +83,6 @@ export const Profile: React.FC = () => {
           </button>
         </div>
       </div>
-
       <section className={styles.coursesSection}>
         <h2 className={styles.sectionTitle}>Мои курсы</h2>
         {userCourses.length === 0 ? (
@@ -119,10 +118,21 @@ export const Profile: React.FC = () => {
                   </div>
                   <button
                     className={styles.removeButton}
-                    onClick={() => handleRemoveCourse(course._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleRemoveCourse(course._id);
+                    }}
+                    onMouseEnter={() => setTooltipVisible(course._id)}
+                    onMouseLeave={() => setTooltipVisible(null)}
+                    onFocus={() => setTooltipVisible(course._id)}
+                    onBlur={() => setTooltipVisible(null)}
                     aria-label="Удалить курс"
                   >
-                    −<span className={styles.tooltip}>Удалить курс</span>
+                    −
+                    {tooltipVisible === course._id && (
+                      <span className={styles.tooltip}>Удалить курс</span>
+                    )}
                   </button>
                 </div>
                 <div className={styles.courseContent}>
@@ -168,7 +178,6 @@ export const Profile: React.FC = () => {
           </div>
         )}
       </section>
-
       {isWorkoutModalOpen && selectedCourseId && (
         <WorkoutFilterModal
           workouts={courseWorkouts}
@@ -177,13 +186,18 @@ export const Profile: React.FC = () => {
           onSelect={handleWorkoutSelect}
         />
       )}
-
       {workoutsLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.spinner} />
           <p>Загрузка тренировок...</p>
         </div>
       )}
+      <button
+        className={styles.backToTop}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        Наверх ↑
+      </button>
     </div>
   );
 };

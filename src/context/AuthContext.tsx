@@ -13,6 +13,7 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   error: string | null;
+  clearError: () => void;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -28,7 +29,7 @@ export interface AuthContextType {
   setReturnUrl: (url: string) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -85,6 +86,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     navigate("/");
   };
+
+  const clearError = () => setError(null);
 
   const fetchUser = async () => {
     try {
@@ -154,6 +157,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     login,
     register,
     logout,
+    clearError,
     fetchUser,
     addCourseLocally,
     removeCourseLocally,

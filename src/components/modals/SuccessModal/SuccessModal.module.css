@@ -36,13 +36,12 @@
 }
 
 .successTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 40px;
   line-height: 110%;
   letter-spacing: 0;
   color: rgba(0, 0, 0, 1);
-  margin: 0;
 }
 
 @keyframes fadeIn {
@@ -63,4 +62,30 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@media (max-width: 426px) {
+ .successTitle {
+  font-weight: 400;
+  font-size: 32px;
+}
+
+.modalOverlay {
+  padding: 20px;
+}
+}
+
+@media (max-width: 376px) {
+ .successTitle {
+  font-weight: 400;
+  font-size: 32px;
+}
+
+.modalOverlay {
+  padding: 20px;
+}
+
+.backButton {
+  margin-bottom: 20px;
+}
 }

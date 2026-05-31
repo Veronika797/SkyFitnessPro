@@ -45,7 +45,7 @@ export const WorkoutPage: React.FC = () => {
         const courseData = await getCourseById(courseId);
         setCourse(courseData);
 
-        const workoutData = await getWorkoutById(workoutId);
+        const workoutData = await getWorkoutById(courseId, workoutId);
         setWorkout(workoutData);
 
         setProgress(new Array(workoutData.exercises.length).fill(0));

@@ -16,8 +16,12 @@ export const getCourseWorkouts = async (courseId: string): Promise<Workout[]> =>
   return response.data;
 };
 
-export const getWorkoutById = async (workoutId: string): Promise<Workout> => {
-  const response = await axiosInstance.get<Workout>(`/workouts/${workoutId}`);
+export const getWorkoutById = async (courseId: string, workoutId: string): Promise<Workout> => {
+  if (!courseId || !workoutId) {
+    throw new Error(`getWorkoutById: missing courseId="${courseId}" or workoutId="${workoutId}"`);
+  }
+
+  const response = await axiosInstance.get<Workout>(`/courses/${courseId}/workouts/${workoutId}`);
   return response.data;
 };
 

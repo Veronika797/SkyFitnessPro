@@ -14,29 +14,14 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-}
-
-.logoTop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   cursor: pointer;
 }
 
-.logoTop img {
-  display: flex;
-  align-items: center;
-}
-
-.logoIcon {
-  width: 32px;
-  height: 32px;
+.logoImage {
+width: auto;
+  height: 40px; 
   object-fit: contain;
-}
-
-.logoSvg {
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 .tagline {
@@ -105,7 +90,7 @@
   padding: 8px 12px;
   border-radius: 24px;
   transition: background 0.2s;
-  font-family: Roboto, sans-serif;
+  font-family: "Roboto", monospace;
   font-size: 16px;
   font-weight: 500;
   color: rgba(32, 32, 32, 1);
@@ -182,7 +167,7 @@
   padding: 12px 20px;
   border: none;
   border-radius: 46px;
-  font-family: Roboto;
+ font-family: "Roboto", monospace;
   font-size: 18px;
   font-weight: 400;
   cursor: pointer;
@@ -216,7 +201,7 @@
   padding: 12px 20px;
   border: 1px solid rgba(0, 0, 0, 1);
   border-radius: 46px;
-  font-family: Roboto;
+ font-family: "Roboto", monospace;
   font-size: 18px;
   font-weight: 400;
   cursor: pointer;
@@ -255,4 +240,42 @@
     right: -10px;
     min-width: 240px;
   }
+}
+
+@media (max-width: 376px) {
+  .logoImage {
+    height: 32px; 
+  }
+}
+
+.header {
+      gap: 15px;
+}
+
+.heroContent {
+  margin-bottom: 5px;
+}
+
+.loginBtn {
+      width: 83px;
+    height: 36px;
+    border-radius: 46px;
+    opacity: 1;
+    padding-top: 8px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+    border: none;
+    background: rgba(188, 236, 48, 1);
+    padding-left: 16px;
+    font-weight: 400;
+    line-height: 110.00000000000001%;
+    letter-spacing: 0px;
+    text-align: center;
+}
+
+.tagline {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 2px;
+  margin-left: 4px; 
 }

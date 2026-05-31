@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { getCourseById, addCourseToUser } from "@/api/courseService";
-import { Course } from "@/types";
+import { getCourseById, addCourseToUser, getCourseProgress } from "@/api/courseService";
+import { Course, CourseProgress } from "@/types";
 import styles from "./CourseDescription.module.css";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@/utils/errorUtils";
@@ -19,6 +19,7 @@ export const CourseDescription: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, openLoginModal, setReturnUrl } = useAuth();
+  const [_progress, setProgress] = useState<CourseProgress | null>(null);
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +33,25 @@ export const CourseDescription: React.FC = () => {
         setLoading(true);
         const data = await getCourseById(id);
         setCourse(data);
+
+        if (user) {
+          try {
+            const prog = await getCourseProgress(id);
+            setProgress(prog);
+          } catch {
+            setProgress({ courseId: id, courseCompleted: false, workoutsProgress: [] });
+          }
+        }
       } catch (err) {
         setError(getErrorMessage(err));
+        setProgress({ courseId: id, courseCompleted: false, workoutsProgress: [] });
       } finally {
         setLoading(false);
       }
     };
 
     fetchCourse();
-  }, [id]);
+  }, [id, user]);
 
   const handleActionClick = async () => {
     if (user) {
@@ -93,6 +104,7 @@ export const CourseDescription: React.FC = () => {
     <div className={styles.coursePage}>
       <div className={styles.header}>
         <div className={`${styles.headerBackground} ${bgClass}`} />
+        <h1 className={styles.courseTitle}>{course.nameRU}</h1>
       </div>
 
       {course.fitting?.length > 0 && (
@@ -126,6 +138,9 @@ export const CourseDescription: React.FC = () => {
       )}
 
       <section className={styles.newBodySection}>
+        <div className={styles.sectionClip}>
+          <img src="/img/line.svg" alt="Стрелка" className={styles.arrowOverlay} />
+        </div>
         <div className={styles.newBodyContent}>
           <div className={styles.newBodyText}>
             <h2 className={styles.newBodyTitle}>
@@ -144,8 +159,22 @@ export const CourseDescription: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className={styles.newBodyImage}>
-          <img src="/img/Run.png" alt="Начните путь к новому телу" />
+        <div className={styles.newBodyImageWrapper}>
+          <img src="/img/Run.png" alt="Начните путь к новому телу" className={styles.runnerImage} />
+          <svg
+            className={styles.shoulderAccent}
+            viewBox="0 0 120 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 30 Q 60 0, 110 25"
+              stroke="rgba(0, 0, 0, 1)"
+              strokeWidth="12"
+              strokeLinecap="round"
+              fill="none"
+            />
+          </svg>
         </div>
       </section>
     </div>
