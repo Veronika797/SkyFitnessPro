@@ -1,105 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import {
-  Course,
-  getUserCourses,
-  removeUserCourse,
-  getCourseProgress,
-  CourseProgress,
-} from "../../api/courseService";
+import { useAuth } from "@/context/AuthContext";
+import { WorkoutFilterModal } from "@/components/modals/WorkoutFilterModal/WorkoutFilterModal";
 import styles from "./Profile.module.css";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
-interface UserCourse extends Course {
-  progress: number;
-  status: "not_started" | "in_progress" | "completed";
-}
+const getDifficultyText = (d: string) =>
+  ({ легкий: "Лёгкий", средний: "Средний", сложный: "Сложный" })[d] || d;
+
+const getCourseImage = (name: string) =>
+  ({
+    Йога: "/img/Maskgroup.png",
+    Стретчинг: "/img/Maskgroup1.png",
+    Фитнес: "/img/Maskgroup2.png",
+    "Степ-аэробика": "/img/Maskgroup3.png",
+    Бодифлекс: "/img/Maskgroup4.png",
+  })[name] || "/img/placeholder.png";
 
 export const Profile: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [userCourses, setUserCourses] = useState<UserCourse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    userCourses,
+    loading,
+    error,
 
-  const calculateCourseProgress = (
-    progress: CourseProgress | null,
-    totalWorkouts: number,
-  ): number => {
-    if (!progress || totalWorkouts === 0) return 0;
-    const completed = progress.workoutsProgress.filter(
-      (w) => w.workoutCompleted,
-    ).length;
-    return Math.round((completed / totalWorkouts) * 100);
-  };
+    handleStartCourse,
+    handleRemoveCourse,
+    handleRestartCourse,
+    isWorkoutModalOpen,
+    selectedCourseId,
+    courseWorkouts,
+    workoutsLoading,
+    handleWorkoutSelect,
+    closeWorkoutModal,
+  } = useUserProfile();
 
-  const getCourseStatus = (progress: number): UserCourse["status"] => {
-    if (progress === 0) return "not_started";
-    if (progress === 100) return "completed";
-    return "in_progress";
-  };
-
-  useEffect(() => {
-    const fetchUserCourses = async () => {
-      if (!user) return;
-      try {
-        setLoading(true);
-        setError(null);
-
-        const courses = await getUserCourses();
-
-        const coursesWithProgress = await Promise.all(
-          courses.map(async (course) => {
-            try {
-              const progress = await getCourseProgress(course._id);
-              const progressPercent = calculateCourseProgress(
-                progress,
-                course.workouts?.length || 0,
-              );
-              return {
-                ...course,
-                progress: progressPercent,
-                status: getCourseStatus(progressPercent),
-              } as UserCourse;
-            } catch {
-              return {
-                ...course,
-                progress: 0,
-                status: "not_started",
-              } as UserCourse;
-            }
-          }),
-        );
-
-        setUserCourses(coursesWithProgress);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Не удалось загрузить курсы");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUserCourses();
-  }, [user]);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-  const handleStartCourse = (courseId: string) => {
-    navigate(`/courses/${courseId}`);
-  };
-
-  const handleRemoveCourse = async (courseId: string) => {
-    if (!window.confirm("Удалить этот курс?")) return;
-    try {
-      await removeUserCourse(courseId);
-      setUserCourses(userCourses.filter((c) => c._id !== courseId));
-    } catch (err: any) {
-      alert("Ошибка: " + (err.response?.data?.message || "Попробуйте снова"));
-    }
-  };
-
-  const getButtonText = (status: UserCourse["status"]) => {
+  const getButtonText = (status: "not_started" | "in_progress" | "completed") => {
     const map = {
       not_started: "Начать тренировки",
       in_progress: "Продолжить",
@@ -108,18 +45,6 @@ export const Profile: React.FC = () => {
     return map[status] || "Начать";
   };
 
-  const getDifficultyText = (d: string) =>
-    ({ легкий: "Лёгкий", средний: "Средний", сложный: "Сложный" })[d] || d;
-
-  const getCourseImage = (name: string) =>
-    ({
-      Йога: "/img/skillcard1.png",
-      Стретчинг: "/img/skillcard2.png",
-      Фитнес: "/img/skillcard3.png",
-      "Степ-аэробика": "/img/skillcard4.png",
-      Бодифлекс: "/img/skillcard5.png",
-    })[name] || "/img/placeholder.png";
-
   if (loading)
     return (
       <div className={styles.loading}>
@@ -127,6 +52,7 @@ export const Profile: React.FC = () => {
         <p>Загрузка...</p>
       </div>
     );
+
   if (error || !user)
     return (
       <div className={styles.error}>
@@ -143,19 +69,16 @@ export const Profile: React.FC = () => {
         <div className={styles.userAvatar}>
           <div className={styles.avatarStack}>
             <img src="/img/userBg.svg" alt="" className={styles.avatarBg} />
-
             <img src="/img/userBgTop.png" alt="" className={styles.avatarTop} />
-
             <img src="/img/userBgBtm.png" alt="" className={styles.avatarBtm} />
           </div>
         </div>
         <div className={styles.userInfo}>
           <h2 className={styles.userName}>
-            {user.email.split("@")[0].charAt(0).toUpperCase() +
-              user.email.split("@")[0].slice(1)}
+            {user.email.split("@")[0].charAt(0).toUpperCase() + user.email.split("@")[0].slice(1)}
           </h2>
           <p className={styles.userEmail}>Логин: {user.email}</p>
-          <button className={styles.logoutButton} onClick={handleLogout}>
+          <button className={styles.logoutButton} onClick={logout}>
             Выйти
           </button>
         </div>
@@ -166,63 +89,76 @@ export const Profile: React.FC = () => {
         {userCourses.length === 0 ? (
           <div className={styles.noCourses}>
             <p>У вас пока нет курсов</p>
-            <button
-              className={styles.browseButton}
-              onClick={() => navigate("/")}
-            >
+            <button className={styles.browseButton} onClick={() => navigate("/")}>
               Перейти к каталогу
             </button>
           </div>
         ) : (
           <div className={styles.coursesGrid}>
             {userCourses.map((course) => (
-              <div key={course._id} className={styles.courseCard}>
+              <div
+                key={course._id}
+                className={styles.courseCard}
+                onClick={() => {
+                  course.status === "completed"
+                    ? handleRestartCourse(course._id)
+                    : handleStartCourse(course._id);
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Открыть курс "${course.nameRU}"`}
+              >
                 <div className={styles.courseHeader}>
                   <div className={styles.courseImageWrapper}>
                     <img
                       src={getCourseImage(course.nameRU)}
                       alt={course.nameRU}
                       className={styles.courseImage}
-                      onError={(e) =>
-                        ((e.target as HTMLImageElement).style.display = "none")
-                      }
+                      onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
                     />
                   </div>
                   <button
                     className={styles.removeButton}
                     onClick={() => handleRemoveCourse(course._id)}
+                    aria-label="Удалить курс"
                   >
-                    ×
+                    −<span className={styles.tooltip}>Удалить курс</span>
                   </button>
                 </div>
                 <div className={styles.courseContent}>
                   <h3 className={styles.courseTitle}>{course.nameRU}</h3>
-                  <div className={styles.courseMeta}>
-                    <span className={styles.metaItem}>
-                      {course.durationInDays} дней
-                    </span>
-                    <span className={styles.metaItem}>
-                      {course.dailyDurationInMinutes.from}-
-                      {course.dailyDurationInMinutes.to} мин
-                    </span>
-                  </div>
-                  <div className={styles.difficulty}>
-                    {getDifficultyText(course.difficulty)}
-                  </div>
-                  <div className={styles.progressSection}>
-                    <div className={styles.progressLabel}>
-                      Прогресс: {course.progress}%
+                  <div className="courseBlock">
+                    <div className={styles.courseMeta}>
+                      <span className={styles.metaItem}>
+                        <img src="/img/Calendar.png" /> {course.durationInDays} дней
+                      </span>
+                      <span className={styles.metaItem}>
+                        <img src="/img/Time.png" alt="" /> {course.dailyDurationInMinutes.from}-
+                        {course.dailyDurationInMinutes.to} мин
+                      </span>
                     </div>
-                    <div className={styles.progressBar}>
-                      <div
-                        className={styles.progressFill}
-                        style={{ width: `${course.progress}%` }}
-                      />
+                    <div className={styles.difficulty}>
+                      <img src="/img/Group.png" /> {getDifficultyText(course.difficulty)}
+                    </div>
+                    <div className={styles.progressSection}>
+                      <div className={styles.progressLabel}>Прогресс: {course.progress}%</div>
+                      <div className={styles.progressBar}>
+                        <div
+                          className={styles.progressFill}
+                          style={{ width: `${course.progress}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
+
                   <button
                     className={styles.actionButton}
-                    onClick={() => handleStartCourse(course._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      course.status === "completed"
+                        ? handleRestartCourse(course._id)
+                        : handleStartCourse(course._id);
+                    }}
                   >
                     {getButtonText(course.status)}
                   </button>
@@ -232,6 +168,24 @@ export const Profile: React.FC = () => {
           </div>
         )}
       </section>
+
+      {isWorkoutModalOpen && selectedCourseId && (
+        <WorkoutFilterModal
+          workouts={courseWorkouts}
+          courseName={userCourses.find((c) => c._id === selectedCourseId)?.nameRU || ""}
+          onClose={closeWorkoutModal}
+          onSelect={handleWorkoutSelect}
+        />
+      )}
+
+      {workoutsLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.spinner} />
+          <p>Загрузка тренировок...</p>
+        </div>
+      )}
     </div>
   );
 };
+
+export default Profile;

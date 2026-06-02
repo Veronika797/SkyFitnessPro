@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import styles from "./Header.module.css";
 
 interface HeaderProps {
@@ -8,14 +8,14 @@ interface HeaderProps {
   onRegisterClick?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  onLoginClick,
-  onRegisterClick,
-}) => {
+export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _ }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const showTagline = location.pathname === "/";
 
   const handleProfileClick = () => {
     navigate("/profile");
@@ -32,12 +32,13 @@ export const Header: React.FC<HeaderProps> = ({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
@@ -56,14 +57,14 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className={styles.header}>
-      <div className={styles.logoBlock}>
+      <div className={styles.logoBlock} onClick={handleLogoClick}>
         <div className={styles.logoTop}>
           <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
           <span className="logoSvg">
             <img src="/img/SkyFitnessPro.svg" alt="logo" />
           </span>
         </div>
-        <p className={styles.tagline}>Онлайн-тренировки для занятий дома</p>
+        {showTagline && <p className={styles.tagline}>Онлайн-тренировки для занятий дома</p>}
       </div>
       <div className={styles.headerActions}>
         {user ? (
@@ -77,9 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <span className={styles.profileName}>{getUserName()}</span>
               <svg
-                className={`${styles.dropdownArrow} ${
-                  isDropdownOpen ? styles.arrowUp : ""
-                }`}
+                className={`${styles.dropdownArrow} ${isDropdownOpen ? styles.arrowUp : ""}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -96,10 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className={styles.dropdownUserEmail}>{user.email}</div>
                 </div>
 
-                <button
-                  className={styles.dropdownMenuItem}
-                  onClick={handleProfileClick}
-                >
+                <button className={styles.dropdownMenuItem} onClick={handleProfileClick}>
                   Мой профиль
                 </button>
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import styles from "./login.module.css";
+import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -9,12 +10,10 @@ interface LoginModalProps {
 
 const getLoginErrorMessage = (error: string | null): string | null => {
   if (!error) return null;
-  if (error.includes("Неверный пароль"))
-    return "Пароль введен неверно, попробуйте еще раз.";
+  if (error.includes("Неверный пароль")) return "Пароль введен неверно, попробуйте еще раз.";
   if (error.includes("Пользователь с таким email не найден"))
     return "Пользователь с такой почтой не найден. Зарегистрируйтесь?";
-  if (error.includes("уже существует"))
-    return "Данная почта уже используется. Попробуйте войти.";
+  if (error.includes("уже существует")) return "Данная почта уже используется. Попробуйте войти.";
   return "Произошла ошибка. Проверьте данные и попробуйте снова.";
 };
 
@@ -24,8 +23,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const [formError, setFormError] = useState("");
 
   const { login, error: authError, openRegisterModal } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const from = (location.state as { from?: Location })?.from?.pathname || "/";
 
@@ -40,13 +39,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     try {
       await login(email, password);
       onClose();
-      const { returnTo } = useAuth();
-      if (returnTo) {
-        window.location.href = returnTo;
-      } else {
-        navigate(from, { replace: true });
+      navigate(from);
+    } catch (err) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Login failed:", err);
       }
-    } catch (err) {}
+    }
   };
 
   const errorMessage = formError || getLoginErrorMessage(authError);
@@ -63,9 +61,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           <span className={styles.logoText}>SkyFitnessPro</span>
         </div>
 
-        {errorMessage && (
-          <div className={styles.errorMessage}>{errorMessage}</div>
-        )}
+        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
 
         <div className={styles.formGroup}>
           <label htmlFor="email"></label>
@@ -96,11 +92,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
         </div>
 
         <div className={styles.btnForm}>
-          <button
-            className={styles.btnLog}
-            type="submit"
-            disabled={!email || !password}
-          >
+          <button className={styles.btnLog} type="submit" disabled={!email || !password}>
             Войти
           </button>
 

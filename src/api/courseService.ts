@@ -1,29 +1,5 @@
 import axiosInstance from "./axiosInstance";
-
-export interface Course {
-  _id: string;
-  nameRU: string;
-  nameEN: string;
-  description: string;
-  directions: string[];
-  fitting: string[];
-  workouts: string[];
-  difficulty: "легкий" | "средний" | "сложный";
-  durationInDays: number;
-  dailyDurationInMinutes: { from: number; to: number };
-}
-
-export interface WorkoutProgress {
-  workoutId: string;
-  workoutCompleted: boolean;
-  progressData: number[];
-}
-
-export interface CourseProgress {
-  courseId: string;
-  courseCompleted: boolean;
-  workoutsProgress: WorkoutProgress[];
-}
+import { Course, Workout, CourseProgress } from "@/types";
 
 export const getAllCourses = async (): Promise<Course[]> => {
   const response = await axiosInstance.get<Course[]>("/courses");
@@ -35,10 +11,18 @@ export const getCourseById = async (courseId: string): Promise<Course> => {
   return response.data;
 };
 
+export const getCourseWorkouts = async (courseId: string): Promise<Workout[]> => {
+  const response = await axiosInstance.get<Workout[]>(`/courses/${courseId}/workouts`);
+  return response.data;
+};
+
+export const getWorkoutById = async (workoutId: string): Promise<Workout> => {
+  const response = await axiosInstance.get<Workout>(`/workouts/${workoutId}`);
+  return response.data;
+};
+
 export const getUserCourseIds = async (): Promise<string[]> => {
-  const response = await axiosInstance.get<{ selectedCourses: string[] }>(
-    "/users/me",
-  );
+  const response = await axiosInstance.get<{ selectedCourses: string[] }>("/users/me");
   return response.data.selectedCourses;
 };
 
@@ -49,31 +33,27 @@ export const getUserCourses = async (): Promise<Course[]> => {
   return Promise.all(promises);
 };
 
-export const addCourseToUser = async (
-  courseId: string,
-): Promise<{ message: string }> => {
-  const response = await axiosInstance.post<{ message: string }>(
-    "/users/me/courses",
-    { courseId },
-  );
-  return response.data;
-};
-
-export const removeUserCourse = async (
-  courseId: string,
-): Promise<{ message: string }> => {
-  const response = await axiosInstance.delete<{ message: string }>(
-    `/users/me/courses/${courseId}`,
-  );
-  return response.data;
-};
-
-export const getCourseProgress = async (
-  courseId: string,
-): Promise<CourseProgress> => {
+export const getProgressByCourse = async (courseId: string): Promise<CourseProgress> => {
   const response = await axiosInstance.get<CourseProgress>(
-    `/users/me/progress?courseId=${courseId}`,
+    `/progress/users/me/progress?courseId=${courseId}`,
   );
+  return response.data;
+};
+
+export const addCourseToUser = async (courseId: string): Promise<{ message: string }> => {
+  const response = await axiosInstance.post<{ message: string }>("/users/me/courses", { courseId });
+  return response.data;
+};
+
+export const removeUserCourse = async (courseId: string): Promise<{ message: string }> => {
+  const response = await axiosInstance.delete<{ message: string }>(`/users/me/courses/${courseId}`);
+  return response.data;
+};
+
+export const getCourseProgress = async (courseId: string): Promise<CourseProgress> => {
+  const response = await axiosInstance.get<CourseProgress>("/users/me/progress", {
+    params: { courseId },
+  });
   return response.data;
 };
 
@@ -89,11 +69,17 @@ export const saveWorkoutProgress = async (
   return response.data;
 };
 
-export const resetCourseProgress = async (
+export const resetCourseProgress = async (courseId: string): Promise<{ message: string }> => {
+  const response = await axiosInstance.patch<{ message: string }>(`/courses/${courseId}/reset`);
+  return response.data;
+};
+
+export const resetWorkoutProgress = async (
   courseId: string,
+  workoutId: string,
 ): Promise<{ message: string }> => {
   const response = await axiosInstance.patch<{ message: string }>(
-    `/courses/${courseId}/reset`,
+    `/courses/${courseId}/workouts/${workoutId}/reset`,
   );
   return response.data;
 };

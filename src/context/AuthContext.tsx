@@ -1,12 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { authService } from "../api/authService";
-import axiosInstance from "../api/axiosInstance";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { authService } from "@/api/authService";
+import axiosInstance from "@/api/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { getErrorMessage, isUnauthorizedError } from "@/utils/errorUtils";
 
 export interface User {
   email: string;
@@ -21,6 +17,8 @@ export interface AuthContextType {
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
   fetchUser: () => Promise<void>;
+  addCourseLocally: (courseId: string) => void;
+  removeCourseLocally: (courseId: string) => void;
   isLoginOpen: boolean;
   isRegisterOpen: boolean;
   openLoginModal: () => void;
@@ -32,15 +30,15 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [returnTo, setReturnTo] = useState<string | null>(null);
+  const navigate = useNavigate();
+
   const setReturnUrl = (url: string) => {
     setReturnTo(url);
   };
@@ -56,36 +54,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         closeModals();
 
         if (returnTo) {
-          window.location.href = returnTo;
+          navigate(returnTo, { replace: true });
+          setReturnTo(null);
+        } else {
+          navigate("/profile", { replace: true });
         }
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Ошибка входа");
-      throw err;
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const initAuth = async () => {
-      if (authService.isAuthenticated()) {
-        await fetchUser();
-      }
-      setIsLoading(false);
-    };
-    initAuth();
-  }, []);
-
-  const fetchUser = async () => {
-    try {
-      const response = await axiosInstance.get<User>("/users/me");
-      setUser(response.data);
-      setError(null);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Ошибка загрузки данных");
-      authService.logout();
-      setUser(null);
     }
   };
 
@@ -95,9 +73,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await authService.register({ email, password });
       await login(email, password);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Ошибка регистрации");
-      throw err;
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +83,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const logout = () => {
     authService.logout();
     setUser(null);
-    window.location.href = "/";
+    navigate("/");
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await axiosInstance.get<User>("/users/me");
+      setUser(response.data);
+      setError(null);
+    } catch (err) {
+      if (isUnauthorizedError(err)) {
+        authService.logout();
+        setUser(null);
+      } else {
+        setError(getErrorMessage(err));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const openLoginModal = () => {
@@ -124,33 +118,60 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setIsRegisterOpen(false);
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        error,
-        login,
-        register,
-        logout,
-        fetchUser,
-        isLoginOpen,
-        isRegisterOpen,
-        openLoginModal,
-        openRegisterModal,
-        closeModals,
-        returnTo,
-        setReturnUrl,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const addCourseLocally = (courseId: string) => {
+    if (user && !user.selectedCourses.includes(courseId)) {
+      setUser({
+        ...user,
+        selectedCourses: [...user.selectedCourses, courseId],
+      });
+    }
+  };
+
+  const removeCourseLocally = (courseId: string) => {
+    if (user) {
+      setUser({
+        ...user,
+        selectedCourses: user.selectedCourses.filter((id) => id !== courseId),
+      });
+    }
+  };
+
+  useEffect(() => {
+    const initAuth = async () => {
+      if (authService.isAuthenticated()) {
+        await fetchUser();
+      } else {
+        setIsLoading(false);
+      }
+    };
+    initAuth();
+  }, []);
+
+  const value: AuthContextType = {
+    user,
+    isLoading,
+    error,
+    login,
+    register,
+    logout,
+    fetchUser,
+    addCourseLocally,
+    removeCourseLocally,
+    isLoginOpen,
+    isRegisterOpen,
+    openLoginModal,
+    openRegisterModal,
+    closeModals,
+    returnTo,
+    setReturnUrl,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

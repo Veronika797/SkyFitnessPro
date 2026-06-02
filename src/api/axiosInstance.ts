@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "/api/fitness",
+  baseURL: "http://localhost:3006/api/fitness",
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,7 +23,6 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("jwt_token");
-      window.location.href = "/login";
     }
     return Promise.reject(error);
   },
