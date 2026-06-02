@@ -7,7 +7,7 @@ import {
   getCourseProgress,
   saveWorkoutProgress,
 } from "@/api/courseService";
-import { Course, Workout, CourseProgress } from "@/types";
+import { Course, Workout } from "@/types";
 import { ProgressModal } from "@/components/modals/ProgressModal/ProgressModal";
 import styles from "./WorkoutPage.module.css";
 import { toast } from "react-toastify";
@@ -45,24 +45,26 @@ export const WorkoutPage: React.FC = () => {
         const courseData = await getCourseById(courseId);
         setCourse(courseData);
 
-        const workoutData = await getWorkoutById(courseId, workoutId);
+        const workoutData = await getWorkoutById(workoutId);
         setWorkout(workoutData);
 
         setProgress(new Array(workoutData.exercises.length).fill(0));
 
         if (user) {
           try {
-            const courseProgress: CourseProgress = await getCourseProgress(courseId);
+            const courseProgress = await getCourseProgress(courseId);
 
-            const workoutProgress = courseProgress.workoutsProgress?.find(
-              (w) => w.workoutId === workoutId,
-            );
+            if (courseProgress) {
+              const workoutProgress = courseProgress.workoutsProgress?.find(
+                (w) => w.workoutId === workoutId,
+              );
 
-            if (
-              workoutProgress?.progressData &&
-              workoutProgress.progressData.length === workoutData.exercises.length
-            ) {
-              setProgress(workoutProgress.progressData);
+              if (
+                workoutProgress?.progressData &&
+                workoutProgress.progressData.length === workoutData.exercises.length
+              ) {
+                setProgress(workoutProgress.progressData);
+              }
             }
           } catch (err) {
             toast.error("Не удалось загрузить прогресс: " + getErrorMessage(err));

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./CardsGrid.module.css";
 import { useNavigate } from "react-router-dom";
 import { getAllCourses, addCourseToUser, removeUserCourse } from "@/api/courseService";
@@ -27,21 +27,20 @@ export const CardsGrid: React.FC = () => {
   const navigate = useNavigate();
   const { user, addCourseLocally, removeCourseLocally } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
-  const [addedCourses, setAddedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
 
+  const addedCourses = useMemo(() => {
+    return new Set(user?.selectedCourses || []);
+  }, [user?.selectedCourses]);
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const data = await getAllCourses();
         setCourses(data);
-
-        if (user) {
-          const userCourseIds = await Promise.resolve(user.selectedCourses);
-          setAddedCourses(new Set(userCourseIds));
-        }
       } catch (_err) {
         setError("Не удалось загрузить курсы");
       } finally {
@@ -49,13 +48,7 @@ export const CardsGrid: React.FC = () => {
       }
     };
     fetchCourses();
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      setAddedCourses(new Set(user.selectedCourses));
-    }
-  }, [user]);
+  }, []);
 
   const handleAddClick = async (e: React.MouseEvent<HTMLButtonElement>, courseId: string) => {
     e.stopPropagation();
@@ -80,16 +73,11 @@ export const CardsGrid: React.FC = () => {
       if (addedCourses.has(courseId)) {
         await removeUserCourse(courseId);
         removeCourseLocally(courseId);
-        setAddedCourses((prev) => {
-          const next = new Set(prev);
-          next.delete(courseId);
-          return next;
-        });
+        removeCourseLocally(courseId);
         toast.info("Курс удалён");
       } else {
         await addCourseToUser(courseId);
         addCourseLocally(courseId);
-        setAddedCourses((prev) => new Set([...prev, courseId]));
         toast.success("Курс добавлен!");
       }
     } catch (err) {

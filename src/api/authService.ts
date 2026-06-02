@@ -1,5 +1,13 @@
 import axiosInstance from "./axiosInstance";
 
+export interface RegisterResponse {
+  message: string;
+}
+
+export interface LoginResponse {
+  token: string;
+}
+
 export interface RegisterData {
   email: string;
   password: string;
@@ -10,19 +18,17 @@ export interface LoginData {
   password: string;
 }
 
-export interface AuthResponse {
-  message?: string;
-  token?: string;
-}
-
 export const authService = {
-  register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await axiosInstance.post<AuthResponse>("/auth/register", data);
+  register: async (data: RegisterData): Promise<RegisterResponse> => {
+    const response = await axiosInstance.post<RegisterResponse>(
+      "/auth/register",
+      JSON.stringify(data),
+    );
     return response.data;
   },
 
-  login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await axiosInstance.post<AuthResponse>("/auth/login", data);
+  login: async (data: LoginData): Promise<LoginResponse> => {
+    const response = await axiosInstance.post<LoginResponse>("/auth/login", JSON.stringify(data));
     return response.data;
   },
 

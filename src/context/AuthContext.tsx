@@ -2,11 +2,15 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { authService } from "@/api/authService";
 import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { getErrorMessage, isUnauthorizedError } from "@/utils/errorUtils";
+import { getErrorMessage } from "@/utils/errorUtils";
+import axios from "axios";
+import { CourseProgress } from "@/types";
 
 export interface User {
+  _id: string;
   email: string;
   selectedCourses: string[];
+  courseProgress?: CourseProgress[];
 }
 
 export interface AuthContextType {
@@ -91,15 +95,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUser = async () => {
     try {
-      const response = await axiosInstance.get<User>("/users/me");
-      setUser(response.data);
+      const response = await axiosInstance.get<{ user: User }>("/users/me");
+      setUser(response.data.user);
       setError(null);
-    } catch (err) {
-      if (isUnauthorizedError(err)) {
+    } catch (err: unknown) {
+      let status: number | undefined;
+      let serverMessage: string = getErrorMessage(err);
+
+      if (axios.isAxiosError<{ message?: string }>(err) && err.response) {
+        status = err.response.status;
+        serverMessage = err.response.data?.message || getErrorMessage(err);
+      }
+
+      if (status === 401 || status === 400) {
         authService.logout();
         setUser(null);
       } else {
-        setError(getErrorMessage(err));
+        setError(serverMessage);
       }
     } finally {
       setIsLoading(false);

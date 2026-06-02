@@ -96,7 +96,7 @@ font-family: "Roboto", monospace;
     flex-direction: column;
   }
   .heroTitle {
-    font-size: 32px;
+    font-size: 42px;
     display: contents;
   }
   .heroBadge {
@@ -134,7 +134,7 @@ font-family: "Roboto", monospace;
 @media (max-width: 450px) {
   .heroTitle {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 32px;
   }
 
   .heroContent {
@@ -143,6 +143,7 @@ font-family: "Roboto", monospace;
 
   .hero {
     padding: 20px;
+    padding-top: 0;
   }
 
   .cardContent {
@@ -151,10 +152,11 @@ font-family: "Roboto", monospace;
 
   .cardTitle {
     margin-bottom: 10px;
+    font-weight: 500;
   }
 
   .cardInfo {
-        gap: 6px;
+    gap: 6px;
     margin-bottom: 6px;
   }
 
@@ -162,7 +164,18 @@ font-family: "Roboto", monospace;
     margin-bottom: 20px;
   }
 
+
+
   .loginBtn {
         width: 83px;
 }
+}
+
+@media (min-width: 427px) and (max-width: 767px) {
+  
+.hero {
+    width: 600px;
+    padding: 0 30px;
+}
+
 }

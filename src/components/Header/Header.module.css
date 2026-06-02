@@ -1,5 +1,6 @@
 .header {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px 40px;
   display: flex;
@@ -7,6 +8,7 @@
   align-items: center;
   position: relative;
   z-index: 100;
+  box-sizing: border-box;
 }
 
 .logoBlock {
@@ -219,45 +221,70 @@ width: auto;
   background: rgba(240, 240, 240, 1);
 }
 
-@media (max-width: 768px) {
-.header {
-      padding: 20px;
+@media (max-width: 1201px) {
+
+  .header {
+   width: 1000px;
+    padding: 20px 0;
+  }
 }
 
-  .profileButton {
-    padding: 6px 8px;
-  }
+@media (max-width: 1050px) {
+  .header {
+   width: 910px;
+    }
+}
 
-  .profileName {
-    display: none;
+@media (max-width: 955px) {
+  .header {
+   width: 810px;
+    }
+}
+
+@media (max-width: 880px) {
+  .header {
+    width: 673px;
   }
+}
+
+@media (max-width: 768px) {
+.header {
+    width: 600px;
+    padding: 20px;
+}
+
+.profileName {
+  display: none;
+}
 
 .tagline {
   display: none;
 }
 
-  .dropdownMenu {
-    right: -10px;
-    min-width: 240px;
-  }
-}
 
-@media (max-width: 376px) {
-  .logoImage {
-    height: 32px; 
-  }
 }
-
+@media (min-width: 427px) and (max-width: 767px) {
+  
 .header {
-      gap: 15px;
+  width: 600px;
+    padding: 30px;
 }
 
-.heroContent {
-  margin-bottom: 5px;
+}
+
+@media (max-width: 426px) {
+ 
+  .header {
+     width: 100%;
+    padding: 20px;
+}
+
+.logoImage {
+    height: 35px;
 }
 
 .loginBtn {
-      width: 83px;
+    width: 83px;
     height: 36px;
     border-radius: 46px;
     opacity: 1;
@@ -272,10 +299,33 @@ width: auto;
     letter-spacing: 0px;
     text-align: center;
 }
+}
+
+@media (max-width: 376px) {
+  .logoImage {
+    height: 32px; 
+  }
+
+
+
+.headerBackground {
+border-radius: 32px;
+}
+
+.heroContent {
+  margin-bottom: 5px;
+}
+
+.profileName {
+  display: none;
+}
+
+/* 
 
 .tagline {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.5);
   margin-top: 2px;
   margin-left: 4px; 
+} */
 }

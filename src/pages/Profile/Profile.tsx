@@ -25,7 +25,6 @@ export const Profile: React.FC = () => {
     userCourses,
     loading,
     error,
-
     handleStartCourse,
     handleRemoveCourse,
     handleRestartCourse,
@@ -37,6 +36,15 @@ export const Profile: React.FC = () => {
     closeWorkoutModal,
   } = useUserProfile();
 
+  if (loading || !user) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner} />
+        <p>Загрузка профиля...</p>
+      </div>
+    );
+  }
+
   const getButtonText = (status: "not_started" | "in_progress" | "completed") => {
     const map = {
       not_started: "Начать тренировки",
@@ -46,14 +54,6 @@ export const Profile: React.FC = () => {
     return map[status] || "Начать";
   };
 
-  if (loading)
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner} />
-        <p>Загрузка...</p>
-      </div>
-    );
-
   if (error || !user)
     return (
       <div className={styles.error}>
@@ -61,6 +61,14 @@ export const Profile: React.FC = () => {
         <button onClick={() => navigate("/")}>← На главную</button>
       </div>
     );
+
+  const getUserName = () => {
+    if (!user?.email) return "Пользователь";
+    const name = user.email.split("@")[0];
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const coursesToRender = userCourses || [];
 
   return (
     <div className={styles.profilePage}>
@@ -74,9 +82,7 @@ export const Profile: React.FC = () => {
           </div>
         </div>
         <div className={styles.userInfo}>
-          <h2 className={styles.userName}>
-            {user.email.split("@")[0].charAt(0).toUpperCase() + user.email.split("@")[0].slice(1)}
-          </h2>
+          <h2 className={styles.userName}>{getUserName()}</h2>
           <p className={styles.userEmail}>Логин: {user.email}</p>
           <button className={styles.logoutButton} onClick={logout}>
             Выйти
@@ -85,7 +91,7 @@ export const Profile: React.FC = () => {
       </div>
       <section className={styles.coursesSection}>
         <h2 className={styles.sectionTitle}>Мои курсы</h2>
-        {userCourses.length === 0 ? (
+        {!coursesToRender || coursesToRender.length === 0 ? (
           <div className={styles.noCourses}>
             <p>У вас пока нет курсов</p>
             <button className={styles.browseButton} onClick={() => navigate("/")}>
@@ -94,7 +100,7 @@ export const Profile: React.FC = () => {
           </div>
         ) : (
           <div className={styles.coursesGrid}>
-            {userCourses.map((course) => (
+            {coursesToRender.map((course) => (
               <div
                 key={course._id}
                 className={styles.courseCard}

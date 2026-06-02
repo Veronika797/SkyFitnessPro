@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile(375);
+  const isMobile = useIsMobile(400);
   const showTagline = location.pathname === "/";
 
   const handleProfileClick = () => {

@@ -442,6 +442,38 @@ font-family: "Roboto", monospace;
   background: #9c6a28;
 }
 
+@media (max-width: 1201px) {
+
+  .profilePage {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .profilePage {
+    width: 910px;
+  }
+}
+
+@media (max-width: 1024px) {
+    .profilePage {
+    width: 910px;
+  }
+}
+
+@media (max-width: 955px) {
+  .profilePage {
+   width: 810px;
+    }
+}
+
+@media (max-width: 880px) {
+  .profilePage {
+    width: 673px;
+  }
+}
+
+
 @media (max-width: 769px) and (min-width: 528px) {
   .coursesGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -470,6 +502,14 @@ font-family: "Roboto", monospace;
  
 }
 
+@media (min-width: 427px) and (max-width: 767px) {
+  
+.profilePage {
+   width: 600px;
+    padding: 30px;
+}
+
+}
 
 @media (max-width: 426px) {
 
@@ -487,7 +527,8 @@ font-family: "Roboto", monospace;
   }
 
   .profilePage {
-    padding: 20px 16px;
+   width: 375px;
+  padding: 0 20px;
   }
 
   .userCard {
@@ -503,7 +544,7 @@ font-family: "Roboto", monospace;
   }
 
   .avatarStack {
-        height: 155px;
+   height: 155px;
   }
 
   .userAvatar {
@@ -534,5 +575,18 @@ font-family: "Roboto", monospace;
 
     .tooltip {
         display: none;
+  }
+
+  .modalOverlay {
+    padding: 10px;
+  }
+
+  .questyonLabel {
+  font-size: 14px;
+  }
+
+  .questionList {
+    padding: 16px;
+    gap: 5px;
   }
 }

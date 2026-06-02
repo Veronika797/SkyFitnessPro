@@ -35,19 +35,21 @@ export const createAuthMock = (
 };
 
 export const createMockUser = (overrides?: Partial<User>): User => ({
+  _id: "6a1ecd7d896b70976c059bfc",
   email: "test@example.com",
-  selectedCourses: [],
+  selectedCourses: ["6i67sm", "q02a6i"],
+  courseProgress: [],
   ...overrides,
 });
 
 export const createMockCourse = (overrides?: Partial<Course>): Course => ({
-  _id: "course_001",
+  _id: "6i67sm",
   nameRU: "Йога",
   nameEN: "Yoga",
-  description: "",
-  directions: [],
-  fitting: [],
-  workouts: [],
+  description: "Курс йоги для начинающих",
+  directions: ["Хатха", "Виньяса"],
+  fitting: ["Для начинающих", "Для дома", "Для здоровья"],
+  workouts: ["kfpq8e", "abc123", "def456", "ghi789"],
   difficulty: "легкий",
   durationInDays: 20,
   dailyDurationInMinutes: { from: 20, to: 40 },
@@ -55,23 +57,90 @@ export const createMockCourse = (overrides?: Partial<Course>): Course => ({
 });
 
 export const createMockWorkout = (overrides?: Partial<Workout>): Workout => ({
-  _id: "workout_001",
-  name: "Урок 1",
-  video: "https://youtube.com/embed/test",
-  exercises: [],
+  _id: "kfpq8e",
+  name: "Урок 1. Введение в йогу",
+  video: "https://www.youtube.com/embed/gJPs7b8SpVw",
+  exercises: [
+    { _id: "ex1", name: "Собака мордой вниз", quantity: 10 },
+    { _id: "ex2", name: "Поза ребёнка", quantity: 15 },
+    { _id: "ex3", name: "Поза кобры", quantity: 8 },
+  ],
   ...overrides,
 });
 
 export const createMockExercise = (overrides?: Partial<Exercise>): Exercise => ({
-  _id: "ex_001",
-  name: "Упражнение",
+  _id: "ex1",
+  name: "Собака мордой вниз",
   quantity: 10,
   ...overrides,
 });
 
 export const createMockProgress = (overrides?: Partial<CourseProgress>): CourseProgress => ({
-  courseId: "course_001",
+  courseId: "6i67sm",
   courseCompleted: false,
-  workoutsProgress: [],
+  workoutsProgress: [
+    {
+      workoutId: "kfpq8e",
+      workoutCompleted: true,
+      progressData: [10, 15, 8],
+    },
+    {
+      workoutId: "abc123",
+      workoutCompleted: false,
+      progressData: [5, 10, 0],
+    },
+  ],
   ...overrides,
 });
+
+export const mockApiResponse = {
+  login: {
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  },
+  register: {
+    message: "Регистрация прошла успешно!",
+  },
+  usersMe: {
+    user: {
+      _id: "6a1ecd7d896b70976c059bfc",
+      email: "test@example.com",
+      selectedCourses: ["6i67sm", "q02a6i"],
+      courseProgress: [],
+    },
+  },
+  courses: [
+    {
+      _id: "6i67sm",
+      nameRU: "Йога",
+      nameEN: "Yoga",
+      description: "Курс йоги для начинающих",
+      directions: ["Хатха", "Виньяса"],
+      fitting: ["Для начинающих", "Для дома"],
+      workouts: ["kfpq8e", "abc123"],
+      difficulty: "легкий",
+      durationInDays: 20,
+      dailyDurationInMinutes: { from: 20, to: 40 },
+    },
+    {
+      _id: "q02a6i",
+      nameRU: "Стретчинг",
+      nameEN: "Stretching",
+      description: "Курс стретчинга",
+      directions: ["Гибкость"],
+      fitting: ["Для всех"],
+      workouts: ["xyz789"],
+      difficulty: "средний",
+      durationInDays: 30,
+      dailyDurationInMinutes: { from: 30, to: 50 },
+    },
+  ],
+  addCourse: {
+    message: "Курс успешно добавлен!",
+  },
+  removeCourse: {
+    message: "Курс успешно удален!",
+  },
+  resetProgress: {
+    message: "Прогресс курса удалён!",
+  },
+};

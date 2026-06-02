@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { getCourseById, addCourseToUser, getCourseProgress } from "@/api/courseService";
+import {
+  getCourseById,
+  addCourseToUser,
+  getCourseProgress,
+  removeUserCourse,
+} from "@/api/courseService";
 import { Course, CourseProgress } from "@/types";
 import styles from "./CourseDescription.module.css";
 import { toast } from "react-toastify";
@@ -18,12 +23,14 @@ const BG_CLASSES: Record<string, string> = {
 export const CourseDescription: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, openLoginModal, setReturnUrl } = useAuth();
+  const { user, openLoginModal, setReturnUrl, addCourseLocally, removeCourseLocally } = useAuth();
   const [_progress, setProgress] = useState<CourseProgress | null>(null);
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false);
+  const [processing, setProcessing] = useState(false);
+
+  const isAdded = user?.selectedCourses?.includes(id || "") || false;
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -34,13 +41,15 @@ export const CourseDescription: React.FC = () => {
         const data = await getCourseById(id);
         setCourse(data);
 
-        if (user) {
+        if (user && isAdded) {
           try {
             const prog = await getCourseProgress(id);
-            setProgress(prog);
+            setProgress(prog || { courseId: id, courseCompleted: false, workoutsProgress: [] });
           } catch {
             setProgress({ courseId: id, courseCompleted: false, workoutsProgress: [] });
           }
+        } else {
+          setProgress({ courseId: id, courseCompleted: false, workoutsProgress: [] });
         }
       } catch (err) {
         setError(getErrorMessage(err));
@@ -54,19 +63,30 @@ export const CourseDescription: React.FC = () => {
   }, [id, user]);
 
   const handleActionClick = async () => {
-    if (user) {
-      try {
-        setAdding(true);
-        await addCourseToUser(id!);
-        toast.success("Курс добавлен в ваш профиль!");
-      } catch (err) {
-        setError(getErrorMessage(err));
-      } finally {
-        setAdding(false);
-      }
-    } else {
+    if (!user) {
       setReturnUrl(window.location.pathname);
       openLoginModal();
+      return;
+    }
+
+    if (!id) return;
+
+    try {
+      setProcessing(true);
+
+      if (isAdded) {
+        await removeUserCourse(id);
+        removeCourseLocally(id);
+        toast.info("Курс удалён из вашего профиля");
+      } else {
+        await addCourseToUser(id);
+        addCourseLocally(id);
+        toast.success("Курс добавлен в ваш профиль!");
+      }
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -100,11 +120,17 @@ export const CourseDescription: React.FC = () => {
     "помогают противостоять стрессам",
   ];
 
+  const getButtonText = () => {
+    if (processing) return "Обработка...";
+    if (!user) return "Войдите, чтобы добавить курс";
+    if (isAdded) return "Курс добавлен ✓";
+    return "Добавить курс";
+  };
+
   return (
     <div className={styles.coursePage}>
       <div className={styles.header}>
         <div className={`${styles.headerBackground} ${bgClass}`} />
-        <h1 className={styles.courseTitle}>{course.nameRU}</h1>
       </div>
 
       {course.fitting?.length > 0 && (
@@ -154,8 +180,12 @@ export const CourseDescription: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <button className={styles.newBodyButton} onClick={handleActionClick} disabled={adding}>
-              {adding ? "Добавление..." : user ? "Добавить курс" : "Войдите, чтобы добавить курс"}
+            <button
+              className={`${styles.newBodyButton} ${isAdded ? styles.added : ""}`}
+              onClick={handleActionClick}
+              disabled={processing}
+            >
+              {getButtonText()}
             </button>
           </div>
         </div>

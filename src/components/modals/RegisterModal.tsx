@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import styles from "./login.module.css";
+import { validatePassword } from "@/utils/validatePassword";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -36,8 +37,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
       setFormError("Пароли не совпадают");
       return;
     }
-    if (password.length < 6) {
-      setFormError("Пароль должен содержать минимум 6 символов");
+
+    const { isValid, errors } = validatePassword(password);
+    if (!isValid) {
+      setFormError(errors[0]);
       return;
     }
 

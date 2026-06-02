@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3006/api/fitness",
+  baseURL: "https://wedev-api.sky.pro/api/fitness",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "text/plain",
+  },
+  validateStatus: (status) => {
+    return status >= 200 && status < 300;
   },
 });
 
@@ -21,7 +24,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 400) {
       localStorage.removeItem("jwt_token");
     }
     return Promise.reject(error);

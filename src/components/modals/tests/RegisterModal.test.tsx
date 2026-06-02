@@ -24,6 +24,8 @@ vi.mock("@/utils/errorUtils", () => ({
 }));
 
 import * as authContextImported from "@/context/AuthContext";
+import * as validatePasswordModule from "@/utils/validatePassword";
+
 const mockUseAuth = authContextImported.useAuth as MockedFunction<
   () => ReturnType<typeof authContextImported.useAuth>
 >;
@@ -31,6 +33,11 @@ const mockUseAuth = authContextImported.useAuth as MockedFunction<
 describe("RegisterModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    vi.mocked(validatePasswordModule.validatePassword).mockReturnValue({
+      isValid: true,
+      errors: [],
+    });
   });
 
   it("должен показывать ошибку от бэкенда", async () => {

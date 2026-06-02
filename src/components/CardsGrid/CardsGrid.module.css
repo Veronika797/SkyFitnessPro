@@ -307,9 +307,7 @@
 }
 
 @media (max-width: 769px) and (min-width: 528px) {
-  .cardsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
 
   .cardAddBtn {
     top: 3%;
@@ -333,7 +331,20 @@
   }
 
   .tooltip {
-        display: none;
+    display: none;
   }
-  
+
+.cardInfo {
+      gap: 6px;
+    margin-bottom: 6px;
+}
+
+  .difficulty {
+  padding-top: 0;
+  }
+
+    .cardsGrid {
+       gap: 20px;
+       margin-bottom: 25px;
+  }
 }

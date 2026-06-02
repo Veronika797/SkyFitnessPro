@@ -57,7 +57,7 @@
 .headerBackground {
   width: 100%;
   height: 100%;
-  background-position: center;
+  /* background-position: center; */
   background-repeat: no-repeat;
 }
 
@@ -204,6 +204,10 @@ font-family: "Roboto", monospace;
 .newBodyButton:hover:not(:disabled) {
   background: rgba(111, 214, 0, 1);
   transform: translateY(-2px);
+}
+
+.newBodyButton.added:hover {
+  background-color: #dc3545;
 }
 
 .newBodyButton:disabled {
@@ -392,9 +396,60 @@ font-family: "Roboto", monospace;
   cursor: wait;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1201px) {
+
+  .header {
+    height: 350px;
+  }
+
   .coursePage {
-        width: 940px;
+   width: 1000px;;
+  }
+
+  .bgBodyflex,
+  .bgFitness,
+  .bgStep,
+  .bgStretching,
+  .bgYoga {
+   background-size: contain;
+  }
+  
+  .reasonsGrid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .reasonCard {
+    width: 319px;
+    height: 150px;
+  }
+
+  .reasonText {
+    font-size: 18px;
+  }
+
+  .arrowOverlay {
+    width: 625px;
+  }
+
+  .newBodyTitle {
+    margin-bottom: 22px;
+    font-size: 48px;
+  }
+
+  .benefitlist {
+    margin: 0
+  }
+}
+
+@media (max-width: 1050px) {
+
+  .header {
+   height: 300px;
+  }
+
+  .coursePage {
+    width: 910px;
   }
 
   .newBodySection {
@@ -415,8 +470,21 @@ font-family: "Roboto", monospace;
     display: flex;
   }
 
+    .reasonCard {
+    display: flex;
+    width: 289px;
+  }
+
+  .reasonNumber {
+    font-size: 70px;
+  }
+
+  .reasonText {
+    font-size: 17px;
+  }
+
   .loginBtn {
-        width: 153px;
+    width: 153px;
     height: 56px;
     font-size: 22px;
   }
@@ -427,35 +495,145 @@ font-family: "Roboto", monospace;
   }
 
   .newBodyButton {
-        height: 60px;
+    height: 60px;
     width: 320px;
     font-size: 15px;
   }
 
+  .newBodySection {
+    margin-top: 67px;
+  }
+
   .benefitItem {
-        font-size: 20px;
+    font-size: 20px;
   }
 
   .arrowOverlay {
-        width: 600px;
-    height: 688px;
+    width: 512px;
+    height: 654px;
     opacity: 0.5;
     right: 43px;
     top: 15%;
   }
+
+  .sectionTitle {
+    margin-bottom: 27px;
+    margin-top: 15px;
+  }
+
+
 }
 
+@media (max-width: 955px) {
+
+  .header {
+    height: 250px;
+  }
+
+  .coursePage {
+   width: 810px;
+    }
+
+    .reasonsGrid {
+      flex-direction: column;
+    }
+    .reasonCard {
+      width: 527px;
+    }
+
+    .reasonNumber {
+      font-size: 77px;
+    }
+
+    .sectionTitle {
+      font-size: 36px;
+    }
+
+    .reasonText {
+      font-size: 23px;
+    }
+
+    .reasonCard {
+      height: 131px;
+    }
+
+    .directionsContainer { 
+    display: flex;
+    flex-direction: column;
+    }
+
+    .arrowOverlay {
+      width: 472px;
+        height: 669px;
+        opacity: 0.5;
+        right: -6px;
+        top: 17%;
+    }
+
+}
+
+@media (max-width: 880px) {
+  .coursePage {
+      width: 673px;
+    }
+
+.newBodyImageWrapper {
+  top: 22px;
+  left: -24px;
+}
+
+.runnerImage {
+  height: 393px;
+}
+    .newBodyTitle {
+  font-size: 36px;
+    }
+
+    /* .reasonsGrid {
+      flex-direction: column;
+    } */
+    /* .reasonCard {
+      width: 527px;
+    } */
+
+    /* .reasonNumber {
+      font-size: 77px;
+    } */
+
+    .benefitItem {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .arrowOverlay {
+       width: 351px;
+        height: 924px;
+        transform: rotate(3deg);
+        right: 51px;
+        top: -11%;
+    }
+
+    .shoulderAccent {
+    width: 51px;
+    height: 13px;
+    top: 116px;
+    right: 260px;
+    transform: rotate(-46deg);
+    }
+
+    .newBodyButton {
+    width: 246px;
+    font-size: 18px;
+    }
+
+}
 
 @media (max-width: 768px) {
 .coursePage {
     background-position: center;
     background-size: contain;
+    width: 600px;
 }
-
-  .header {
-    flex-direction: column;
-    padding: 30px;
-  }
 
   .title {
     font-size: 32px;
@@ -471,12 +649,11 @@ font-family: "Roboto", monospace;
     background-position: center;
     background-size: contain;
 }
-
-  .bgYoga { background-image: url("/img/Maskgroup.png"); }
-  .bgStretching { background-image: url("/img/Maskgroup1.png"); }
-  .bgFitness { background-image: url("/img/Maskgroup2.png"); } 
-  .bgStep { background-image: url("/img/Maskgroup3.png"); }
-  .bgBodyflex { background-image: url("/img/Maskgroup4.png"); }
+      .bgYoga { background-image: url("/img/skillcard1.png"); }
+  .bgStretching { background-image: url("/img/skillcard2.png"); }
+  .bgFitness { background-image: url("/img/skillcard3.png"); } 
+  .bgStep { background-image: url("/img/skillcard4.png"); }
+  .bgBodyflex { background-image: url("/img/skillcard5.png"); }
 
   .metaInfo {
     gap: 16px;
@@ -485,7 +662,6 @@ font-family: "Roboto", monospace;
   .reasonsGrid {
    display: flex;
    flex-direction: column;
-   align-items: center;
   }
 
 
@@ -502,25 +678,45 @@ font-family: "Roboto", monospace;
   }
 
   .arrowOverlay {
-       width: 300px;
-        height: 325px;
-        opacity: 0.5;
-        right: 29px;
-        top: 37%;
+   width: 300px;
+  height: 325px;
+  opacity: 0.5;
+  right: 20px;
+  top: 52%;
+  }
+
+  .newBodyImageWrapper {
+    top: 68px;
+   left: -1px;
   }
 
    .shoulderAccent {
-    width: 123px;
-    height: 15px;
-    top: 76px;
-    right: 223px;
+    width: 118px;
+    height: 12px;
+     top: 80px;
+    right: 162px;
    }
   
   .shoulderAccent path {
     stroke-width: 6 !important; 
   }
+
+  .sectionTitle {
+   margin-top: 0;
+  }
 }
 
+@media (min-width: 427px) and (max-width: 767px) {
+   .coursePage {
+    width: 600px;
+    padding: 0 30px;
+  }
+
+  .header {
+    height: 170px;
+    }
+
+}
 
 
 @media (max-width: 426px) {
@@ -529,8 +725,7 @@ font-family: "Roboto", monospace;
   }
 
   .header {
-  padding: 0;
-  margin-bottom: 25px;
+  height: 389px;
 }
 
  .arrowOverlay {
@@ -551,7 +746,7 @@ font-family: "Roboto", monospace;
 
   .coursePage {
     position: relative;
-    width: 100%;
+     width: 382px;
     padding: 0 16px;
     box-sizing: border-box;
   }
@@ -560,7 +755,6 @@ font-family: "Roboto", monospace;
     position: relative;
     z-index: 0;
     width: 100%;
-    margin-bottom: 24px;
   }
 
   .newBodySection {
@@ -591,7 +785,7 @@ font-family: "Roboto", monospace;
 
   .newBodyImageWrapper {
      position: absolute;
-        right: -107px;
+        right: -155px;
         top: -241px;
         width: auto;
         height: auto;
@@ -604,15 +798,15 @@ font-family: "Roboto", monospace;
     position: absolute;
     width: 35px;
     height: 23px;
-    top: 72px;
-    right: 238px;
+   top: 70px;
+    right: 295px;
     transform: rotate(-40deg);
     z-index: 4;
     pointer-events: none;
 }
 
 .shoulderAccent path {
-    stroke-width: 6 !important; 
+    stroke-width: 12 !important; 
   }
 
   .runnerImage {
@@ -660,11 +854,13 @@ font-family: "Roboto", monospace;
     display: block;
     font-size: 16px;
     padding: 14px 24px;
+    font-weight: 400;
   }
 
   .sectionTitle {
     font-size: 24px;
     margin-bottom: 20px;
+   margin-top: 30px;
   }
 
   .reasonsGrid {
@@ -674,20 +870,18 @@ font-family: "Roboto", monospace;
   }
 
   .reasonCard {
-    width: 343px;
+  width: 343px;
     height: 141px;
-    padding: 16px;
-    gap: 20px;
+    gap: 12px;
   }
 
   .reasonNumber {
-    font-size: 48px;
+   font-size: 75px;
   }
 
   .reasonText {
     font-size: 18px;
     font-size: 18px;
-    width: 235px;
   }
 
   .directionsContainer {
@@ -702,4 +896,10 @@ font-family: "Roboto", monospace;
     background-position: center;
     background-size: cover;
   }
+
+    .bgYoga { background-image: url("/img/Maskgroup.png"); }
+  .bgStretching { background-image: url("/img/Maskgroup1.png"); }
+  .bgFitness { background-image: url("/img/Maskgroup2.png"); } 
+  .bgStep { background-image: url("/img/Maskgroup3.png"); }
+  .bgBodyflex { background-image: url("/img/Maskgroup4.png"); }
 }
