@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import styles from "./login.module.css";
 import { validatePassword } from "@/utils/validatePassword";
+import logoDesktop from "@/assets/logo.png";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -73,7 +74,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.logoTop}>
-          <img src="/img/logo.png" alt="logo" className={styles.logoIcon} />
+          <img src={logoDesktop} alt="logo" className={styles.logoIcon} />
         </div>
 
         {errorMessage && (

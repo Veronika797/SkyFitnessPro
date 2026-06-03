@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/utils/errorUtils";
 import axios from "axios";
 import { CourseProgress } from "@/types";
+import { globalCache } from "@/api/globalCache";
+import { progressCache } from "@/api/progressCache";
 
 export interface User {
   _id: string;
@@ -88,6 +90,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     authService.logout();
     setUser(null);
+
+    globalCache.clear();
+    progressCache.clear();
+
     navigate("/");
   };
 
@@ -96,8 +102,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const fetchUser = async () => {
     try {
       const response = await axiosInstance.get<{ user: User }>("/users/me");
-      setUser(response.data.user);
+      const userData = response.data.user;
+
+      setUser(userData);
       setError(null);
+
+      globalCache.clearKey("userCourses");
+      globalCache.clearKey("userCoursesList");
+      globalCache.clearKey("userCourseIds");
     } catch (err: unknown) {
       let status: number | undefined;
       let serverMessage: string = getErrorMessage(err);

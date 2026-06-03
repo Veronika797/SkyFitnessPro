@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import styles from "./login.module.css";
+import logoDesktop from "@/assets/logo.png";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -70,7 +71,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
         aria-label="Форма входа"
       >
         <div className={styles.logoTop}>
-          <img src="/img/logo.png" alt="logo" className={styles.logoIcon} />
+          <img src={logoDesktop} alt="logo" className={styles.logoIcon} />
         </div>
 
         {errorMessage && (

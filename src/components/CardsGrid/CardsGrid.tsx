@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import styles from "./CardsGrid.module.css";
 import { useNavigate } from "react-router-dom";
 import { getAllCourses, addCourseToUser, removeUserCourse } from "@/api/courseService";
@@ -31,16 +31,21 @@ export const CardsGrid: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
 
+  const isLoaded = useRef(false);
+
   const addedCourses = useMemo(() => {
     return new Set(user?.selectedCourses || []);
   }, [user?.selectedCourses]);
 
   useEffect(() => {
+    if (isLoaded.current) return;
+
     const fetchCourses = async () => {
       try {
         setLoading(true);
         const data = await getAllCourses();
         setCourses(data);
+        isLoaded.current = true;
       } catch (_err) {
         setError("Не удалось загрузить курсы");
       } finally {

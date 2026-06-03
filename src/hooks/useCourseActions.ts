@@ -28,7 +28,7 @@ export const useCourseActions = <T extends Course>(
   setUserCourses: React.Dispatch<React.SetStateAction<T[]>>,
   navigate: (path: string) => void,
 ): UseCourseActionsReturn => {
-  const { calculateProgress } = useCourseProgress();
+  const { calculateProgress, clearCache } = useCourseProgress();
   const { isWorkoutModalOpen, openWorkoutModal, closeWorkoutModal } = useModalManagement();
   const { removeCourseLocally } = useAuth();
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
@@ -86,6 +86,7 @@ export const useCourseActions = <T extends Course>(
       await removeUserCourse(courseId);
       setUserCourses((prev) => prev.filter((c) => c._id !== courseId));
       removeCourseLocally(courseId);
+      clearCache();
       toast.success("Курс удалён из профиля");
     } catch (_err) {
       toast.error("Не удалось удалить курс");
@@ -96,6 +97,7 @@ export const useCourseActions = <T extends Course>(
     if (!window.confirm("Вы уверены, что хотите начать курс заново?")) return;
     try {
       await resetCourseProgress(courseId);
+      clearCache();
 
       const course = _userCourses.find((c) => c._id === courseId);
       if (!course) {

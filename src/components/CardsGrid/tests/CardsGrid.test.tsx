@@ -73,11 +73,13 @@ describe("CardsGrid", () => {
   });
 
   it("должен отображать курсы после загрузки", async () => {
-    render(
-      <BrowserRouter>
-        <CardsGrid />
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <CardsGrid />
+        </BrowserRouter>,
+      );
+    });
     await screen.findByText("Йога");
     expect(screen.getByText("Йога")).toBeInTheDocument();
   });
@@ -99,29 +101,37 @@ describe("CardsGrid", () => {
   });
 
   it("должен переходить на страницу курса при клике на карточку", async () => {
-    render(
-      <BrowserRouter>
-        <CardsGrid />
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <CardsGrid />
+        </BrowserRouter>,
+      );
+    });
     await screen.findByText("Йога");
 
     const yogaCard = screen.getByText("Йога").closest('[class*="cardWrapper"]');
-    fireEvent.click(yogaCard!);
+    await act(async () => {
+      fireEvent.click(yogaCard!);
+    });
 
     expect(mockNavigate).toHaveBeenCalledWith("/courses/yoga_001");
   });
 
   it("должен перенаправлять на логин при попытке добавить курс без авторизации", async () => {
-    render(
-      <BrowserRouter>
-        <CardsGrid />
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <CardsGrid />
+        </BrowserRouter>,
+      );
+    });
     await screen.findByText("Йога");
 
     const addButton = screen.getByLabelText(/добавить курс|плюс|\+/i);
-    fireEvent.click(addButton);
+    await act(async () => {
+      fireEvent.click(addButton);
+    });
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith("/login", expect.any(Object));
@@ -137,15 +147,19 @@ describe("CardsGrid", () => {
     );
     mockAddCourseToUser.mockResolvedValue({ message: "OK" });
 
-    render(
-      <BrowserRouter>
-        <CardsGrid />
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <CardsGrid />
+        </BrowserRouter>,
+      );
+    });
     await screen.findByText("Йога");
 
     const addButton = screen.getByLabelText(/добавить курс|плюс|\+/i);
-    await userEvent.click(addButton);
+    await act(async () => {
+      await userEvent.click(addButton);
+    });
 
     await waitFor(() => {
       expect(mockAddCourseToUser).toHaveBeenCalledWith("yoga_001");
@@ -162,15 +176,19 @@ describe("CardsGrid", () => {
     );
     mockRemoveUserCourse.mockResolvedValue({ message: "OK" });
 
-    render(
-      <BrowserRouter>
-        <CardsGrid />
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <CardsGrid />
+        </BrowserRouter>,
+      );
+    });
     await screen.findByText("Йога");
 
     const removeButton = screen.getByLabelText(/удалить курс|галочка|✓/i);
-    await userEvent.click(removeButton);
+    await act(async () => {
+      await userEvent.click(removeButton);
+    });
 
     await waitFor(() => {
       expect(mockRemoveUserCourse).toHaveBeenCalledWith("yoga_001");

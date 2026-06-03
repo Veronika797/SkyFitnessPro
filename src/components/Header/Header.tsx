@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import styles from "./Header.module.css";
+import logoMobile from "@/assets/logoMobile.png";
+import logoDesktop from "@/assets/logo.png";
+import profileIcon from "@/assets/profile.png";
 
 interface HeaderProps {
   onLoginClick: () => void;
@@ -37,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
     navigate("/");
   };
 
-  const logoSrc = isMobile ? "/img/logoMobile.png" : "/img/logo.png";
+  const logoSrc = isMobile ? logoMobile : logoDesktop;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
               onClick={toggleDropdown}
               aria-label="Открыть профиль"
             >
-              <img src="/img/profile.png" alt="user" />
+              <img src={profileIcon} alt="user" />
 
               <span className={styles.profileName}>{getUserName()}</span>
               <svg

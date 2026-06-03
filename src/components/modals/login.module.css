@@ -159,9 +159,10 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 426px) {
+@media (max-width: 600px) {
   .authPage {
-    backdrop-filter: none;
+      width: 100%;
+    height: 100%;
   }
 
 }
