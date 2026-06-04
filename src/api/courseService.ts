@@ -103,14 +103,10 @@ export const removeUserCourse = async (courseId: string): Promise<{ message: str
 };
 
 export const getCourseProgress = async (courseId: string): Promise<CourseProgress | null> => {
-  const cached = progressCache.get(courseId);
-  if (cached) return cached;
-
   try {
     const response = await axiosInstance.get<CourseProgress>(`/users/me/progress`, {
       params: { courseId },
     });
-    progressCache.set(courseId, response.data);
     return response.data;
   } catch {
     return null;

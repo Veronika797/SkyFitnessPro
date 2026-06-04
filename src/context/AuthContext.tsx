@@ -7,6 +7,8 @@ import axios from "axios";
 import { CourseProgress } from "@/types";
 import { globalCache } from "@/api/globalCache";
 import { progressCache } from "@/api/progressCache";
+import { clearProgressCaches } from "@/hooks/useCourseProgress";
+import { getAllCourses } from "@/api/courseService";
 
 export interface User {
   _id: string;
@@ -49,6 +51,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const setReturnUrl = (url: string) => {
     setReturnTo(url);
   };
+
+  useEffect(() => {
+    const preloadCourses = async () => {
+      try {
+        await getAllCourses();
+      } catch (err) {
+        setError(getErrorMessage(err));
+      }
+    };
+
+    preloadCourses();
+  }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -93,6 +107,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     globalCache.clear();
     progressCache.clear();
+    clearProgressCaches();
 
     navigate("/");
   };
@@ -110,6 +125,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       globalCache.clearKey("userCourses");
       globalCache.clearKey("userCoursesList");
       globalCache.clearKey("userCourseIds");
+      clearProgressCaches();
     } catch (err: unknown) {
       let status: number | undefined;
       let serverMessage: string = getErrorMessage(err);

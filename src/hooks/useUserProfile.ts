@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { getUserCourses } from "@/api/courseService";
-import { globalCache } from "@/api/globalCache";
 import { Course } from "@/types";
 import { useCourseActions } from "./useCourseActions";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/utils/errorUtils";
+import { useCourseProgress } from "./useCourseProgress";
 
 interface UserCourse extends Course {
   progress: number;
@@ -17,19 +17,13 @@ export const useUserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { calculateProgress } = useCourseProgress();
   const actions = useCourseActions(userCourses, setUserCourses, navigate);
 
   const loadCourses = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-
-      const cachedCourses = globalCache.get<UserCourse[]>("userCourses");
-      if (cachedCourses) {
-        setUserCourses(cachedCourses);
-        setLoading(false);
-        return;
-      }
 
       const courses = await getUserCourses();
 
@@ -39,23 +33,25 @@ export const useUserProfile = () => {
         return;
       }
 
-      const coursesWithDefaultProgress = courses.map((course) => ({
-        ...course,
-        progress: 0,
-        status: "not_started" as const,
-      }));
+      const coursesWithProgress = await Promise.all(
+        courses.map(async (course) => {
+          try {
+            const { progress, status } = await calculateProgress(course);
+            return { ...course, progress, status };
+          } catch {
+            return { ...course, progress: 0, status: "not_started" as const };
+          }
+        }),
+      );
 
-      setUserCourses(coursesWithDefaultProgress);
-
-      globalCache.set("userCourses", coursesWithDefaultProgress);
+      setUserCourses(coursesWithProgress);
     } catch (err) {
-      console.error(" Ошибка загрузки курсов:", err);
       setError(getErrorMessage(err));
       setUserCourses([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [calculateProgress]);
 
   useEffect(() => {
     loadCourses();

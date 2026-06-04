@@ -17,16 +17,12 @@ export const useCourseProgress = () => {
         return { progress: 0, status: "not_started" };
       }
 
-      const cachedResult = progressResultCache.get(course._id);
-      if (cachedResult) {
-        return cachedResult;
-      }
+      progressResultCache.delete(course._id);
 
       const cachedRequest = progressRequestCache.get(course._id);
       if (cachedRequest) {
         const progress = await cachedRequest;
         const result = calculateFromProgress(course, progress);
-        progressResultCache.set(course._id, result);
         return result;
       }
 
@@ -45,17 +41,10 @@ export const useCourseProgress = () => {
       const progress = await requestPromise;
       const result = calculateFromProgress(course, progress);
 
-      progressResultCache.set(course._id, result);
-
       return result;
     } catch {
       return { progress: 0, status: "not_started" };
     }
-  }, []);
-
-  const clearCache = useCallback(() => {
-    progressResultCache.clear();
-    progressRequestCache.clear();
   }, []);
 
   const calculateFromProgress = (
@@ -71,16 +60,57 @@ export const useCourseProgress = () => {
       return { progress: 0, status: "not_started" };
     }
 
-    const completedWorkouts =
-      progress.workoutsProgress?.filter((wp) => wp.workoutCompleted === true).length || 0;
+    let completedWorkouts = 0;
+    let startedWorkouts = 0;
 
-    const percent = Math.round((completedWorkouts / workouts.length) * 100);
+    const workoutsProgress = progress.workoutsProgress || [];
+
+    for (let i = 0; i < workouts.length; i++) {
+      const workoutId = workouts[i];
+      const workoutProgress = workoutsProgress.find((wp) => wp.workoutId === workoutId);
+
+      if (!workoutProgress) {
+        continue;
+      }
+
+      if (workoutProgress.workoutCompleted === true) {
+        completedWorkouts++;
+        continue;
+      }
+
+      const progressData = workoutProgress.progressData || [];
+
+      const hasAnyProgress = progressData.some((value) => value > 0);
+
+      if (hasAnyProgress) {
+        startedWorkouts++;
+      }
+    }
+
+    const totalWorkouts = workouts.length;
+    const progressPercent = Math.round(
+      ((completedWorkouts + startedWorkouts * 0.5) / totalWorkouts) * 100,
+    );
 
     const status: "not_started" | "in_progress" | "completed" =
-      percent === 0 ? "not_started" : percent === 100 ? "completed" : "in_progress";
+      progressPercent === 0 && startedWorkouts === 0
+        ? "not_started"
+        : progressPercent === 100
+          ? "completed"
+          : "in_progress";
 
-    return { progress: percent, status };
+    return { progress: progressPercent, status };
   };
 
+  const clearCache = useCallback(() => {
+    progressResultCache.clear();
+    progressRequestCache.clear();
+  }, []);
+
   return { calculateProgress, clearCache };
+};
+
+export const clearProgressCaches = () => {
+  progressResultCache.clear();
+  progressRequestCache.clear();
 };
