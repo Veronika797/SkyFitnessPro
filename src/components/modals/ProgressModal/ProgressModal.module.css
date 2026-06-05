@@ -28,7 +28,7 @@
 }
 
 .modalTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 32px;
   line-height: 110%;
@@ -73,7 +73,7 @@
 
 .questionLabel {
   display: block;
-  font-family: "Roboto", sans-serif;
+ font-family: "Roboto", monospace;
   font-size: 16px;
   color: #333;
   margin-bottom: 8px;
@@ -90,7 +90,7 @@
   padding-bottom: 16px;
   padding-left: 18px;
   border: 1px solid rgba(208, 206, 206, 1);
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-size: 18px;
   outline: none;
 }
@@ -114,7 +114,7 @@
   padding-right: 26px;
   padding-bottom: 16px;
   padding-left: 26px;
-  font-family: Roboto;
+ font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 18px;
   line-height: 110.00000000000001%;
@@ -125,3 +125,57 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
+@media (max-width: 768px) {
+  .modalOverlay {
+    background: rgba(0, 0, 0, 0.5)
+  }
+
+  .modalContent {
+    height: 500px;
+  }
+
+  .modalHeader {
+        padding: 16px;
+  }
+
+  .modalTitle {
+    margin-bottom: 0px;
+  }
+
+  .optionsList {
+    padding: 15px;
+  }
+
+  .questionItem {
+    margin-bottom: 5px;
+  }
+
+  .numberInput {
+    width: auto;
+  }
+
+  .modalFooter {
+        padding: 16px;
+  }
+
+  .saveButton {
+    width: auto
+  }
+}
+
+
+@media (max-width: 426px) {
+ 
+.modalContent {
+   padding: 15px;
+   height: auto;
+  }
+
+  .numberInput {
+    width: 237px;
+    height: 47px;
+  }
+   
+}
+    

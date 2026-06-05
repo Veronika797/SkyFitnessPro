@@ -4,7 +4,7 @@
   padding: 40px 20px;
 }
 .pageTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 700;
   font-size: 48px;
   line-height: 110%;
@@ -72,14 +72,14 @@
   flex: 1;
 }
 .userName {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 36px;
   color: #000;
   margin: 0 0 8px;
 }
 .userEmail {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-size: 18px;
   color: #646464;
   margin: 0 0 20px;
@@ -96,7 +96,7 @@
   padding-bottom: 16px;
   padding-left: 26px;
   border: 1px solid rgba(0, 0, 0, 1);
-  font-family: Roboto;
+  font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 18px;
   line-height: 110.00000000000001%;
@@ -114,7 +114,7 @@
   margin-top: 40px;
 }
 .sectionTitle {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 40px;
   color: #000;
@@ -128,7 +128,7 @@
   box-shadow: 0 4px 67px -12px rgba(0, 0, 0, 0.13);
 }
 .noCourses p {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-size: 20px;
   color: #646464;
   margin-bottom: 24px;
@@ -138,7 +138,7 @@
   border: none;
   border-radius: 46px;
   padding: 16px 40px;
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 18px;
   color: #000;
@@ -203,9 +203,32 @@
   border: 0.5px solid rgba(0, 0, 0, 1);
   z-index: 1000;
   opacity: 0;
-  /* visibility: hidden; */
   transition: all 0.2s ease;
   pointer-events: none;
+}
+
+.backToTop {
+  display: none;
+  margin: 40px auto 60px;
+  background-color: rgba(188, 236, 48, 1);
+  color: rgba(0, 0, 0, 1);
+  border: none;
+  padding: 14px 36px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backToTop:hover {
+  background-color: #6fd600;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 255, 0, 0.3);
+}
+
+.backToTop:active {
+  transform: scale(0.95);
 }
 
 .removeButton {
@@ -306,7 +329,7 @@
   padding: 24px;
 }
 .courseTitle {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 24px;
   color: #000;
@@ -322,7 +345,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-size: 14px;
   color: #646464;
   background: #f7f7f7;
@@ -337,7 +360,7 @@
   background: #f7f7f7;
   padding: 6px 12px;
   border-radius: 50px;
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-size: 16px;
   color: #646464;
   margin-bottom: 20px;
@@ -346,7 +369,7 @@
   margin-bottom: 20px;
 }
 .progressLabel {
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-size: 14px;
   color: #646464;
   margin-bottom: 8px;
@@ -356,7 +379,6 @@
   height: 6px;
   background: #f0f0f0;
   border-radius: 3px;
-  /* overflow: hidden; */
 }
 .progressFill {
   height: 100%;
@@ -370,7 +392,7 @@
   border: none;
   border-radius: 46px;
   padding: 16px;
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 16px;
   color: #000;
@@ -420,6 +442,49 @@
   background: #9c6a28;
 }
 
+@media (max-width: 1201px) {
+
+  .profilePage {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .profilePage {
+    width: 910px;
+  }
+}
+
+@media (max-width: 1024px) {
+    .profilePage {
+    width: 910px;
+  }
+}
+
+@media (max-width: 955px) {
+  .profilePage {
+   width: 810px;
+    }
+}
+
+@media (max-width: 880px) {
+  .profilePage {
+    width: 673px;
+  }
+}
+
+
+@media (max-width: 769px) and (min-width: 528px) {
+  .coursesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardAddBtn {
+    top: 3%;
+    right: 3%;
+  }
+}
+
 @media (max-width: 768px) {
   .profilePage {
     padding: 20px 16px;
@@ -427,21 +492,101 @@
   .pageTitle {
     font-size: 32px;
   }
-  .userCard {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px 20px;
-  }
+ 
   .userName {
     font-size: 28px;
   }
   .sectionTitle {
     font-size: 28px;
   }
+ 
+}
+
+@media (min-width: 427px) and (max-width: 767px) {
+  
+.profilePage {
+   width: 600px;
+    padding: 30px;
+}
+
+}
+
+@media (max-width: 426px) {
+
+.backToTop {
+    display: flex;
+    margin: 20px auto;
+    position: relative;
+    left: 30%;
+    font-size: 18px;
+    font-weight: 400;
+  }
+
   .coursesGrid {
     grid-template-columns: 1fr;
   }
-  .courseImageWrapper {
-    height: 200px;
+
+  .profilePage {
+   width: 375px;
+  padding: 0 20px;
+  }
+
+  .userCard {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .coursesSection {
+    margin-top: 0;
+  }
+
+  .avatarStack {
+   height: 155px;
+  }
+
+  .userAvatar {
+    width: 141px;
+    height: 141px;
+    opacity: 1;
+    border-radius: 20px;
+  }
+
+  .userInfo {
+    width: 100%;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+
+  .logoutButton {
+    width: 283px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 20px;
+  }
+
+  .actionButton {
+    width: 300px;
+    background: rgba(188, 236, 48, 1);
+  }
+
+    .tooltip {
+        display: none;
+  }
+
+  .modalOverlay {
+    padding: 10px;
+  }
+
+  .questyonLabel {
+  font-size: 14px;
+  }
+
+  .questionList {
+    padding: 16px;
+    gap: 5px;
   }
 }

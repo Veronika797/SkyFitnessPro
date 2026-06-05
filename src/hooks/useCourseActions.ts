@@ -5,6 +5,7 @@ import { useCourseProgress } from "./useCourseProgress";
 import { useModalManagement } from "./useModalManagement";
 import { toast } from "react-toastify";
 import { confirmWithToast } from "@/utils/confirmToast/confirmToast";
+import { useAuth } from "@/context/AuthContext";
 
 interface UseCourseActionsReturn {
   selectedCourseId: string | null;
@@ -27,9 +28,9 @@ export const useCourseActions = <T extends Course>(
   setUserCourses: React.Dispatch<React.SetStateAction<T[]>>,
   navigate: (path: string) => void,
 ): UseCourseActionsReturn => {
-  const { calculateProgress } = useCourseProgress();
+  const { calculateProgress, clearCache } = useCourseProgress();
   const { isWorkoutModalOpen, openWorkoutModal, closeWorkoutModal } = useModalManagement();
-
+  const { removeCourseLocally } = useAuth();
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [courseWorkouts, setCourseWorkouts] = useState<Workout[]>([]);
   const [workoutsLoading, setWorkoutsLoading] = useState(false);
@@ -38,20 +39,32 @@ export const useCourseActions = <T extends Course>(
   const handleStartCourse = async (courseId: string) => {
     try {
       setWorkoutsLoading(true);
+
       const workouts = await getCourseWorkouts(courseId);
 
-      if (workouts?.length) {
+      if (workouts && workouts.length > 0) {
         setSelectedCourseId(courseId);
         setCourseWorkouts(workouts);
         openWorkoutModal();
 
-        const allExercises: Exercise[] = workouts.flatMap((w) => w.exercises);
+        const allExercises: Exercise[] = workouts.flatMap((w) => w.exercises || []);
         setCurrentCourseExercises(allExercises);
       } else {
         toast.info("Тренировки для этого курса пока не доступны");
       }
-    } catch (_err) {
-      toast.error("Не удалось загрузить тренировки");
+    } catch (err) {
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosError = err as { response?: { status?: number; data?: { message?: string } } };
+        if (axiosError.response?.status === 500) {
+          toast.error("Сервер временно недоступен. Попробуйте позже.");
+        } else if (axiosError.response?.status === 404) {
+          toast.error("Тренировки не найдены");
+        } else {
+          toast.error("Не удалось загрузить тренировки");
+        }
+      } else {
+        toast.error("Не удалось загрузить тренировки. Проверьте интернет-соединение.");
+      }
     } finally {
       setWorkoutsLoading(false);
     }
@@ -72,6 +85,8 @@ export const useCourseActions = <T extends Course>(
     try {
       await removeUserCourse(courseId);
       setUserCourses((prev) => prev.filter((c) => c._id !== courseId));
+      removeCourseLocally(courseId);
+      clearCache();
       toast.success("Курс удалён из профиля");
     } catch (_err) {
       toast.error("Не удалось удалить курс");
@@ -82,8 +97,15 @@ export const useCourseActions = <T extends Course>(
     if (!window.confirm("Вы уверены, что хотите начать курс заново?")) return;
     try {
       await resetCourseProgress(courseId);
+      clearCache();
 
-      const { progress, status } = await calculateProgress(courseId);
+      const course = _userCourses.find((c) => c._id === courseId);
+      if (!course) {
+        toast.error("Курс не найден");
+        return;
+      }
+
+      const { progress, status } = await calculateProgress(course);
 
       setUserCourses((prev) =>
         prev.map((course) =>

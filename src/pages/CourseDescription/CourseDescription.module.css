@@ -35,7 +35,7 @@
   margin-top: 20px;
   padding: 12px 24px;
   background: #bc7f30;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 24px;
   font-size: 16px;
@@ -57,14 +57,32 @@
 .headerBackground {
   width: 100%;
   height: 100%;
-  background-position: center;
+  /* background-position: center; */
   background-repeat: no-repeat;
 }
 
+.courseTitle {
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bgYoga { background-image: url("/img/skillcard1.png"); }
+.bgStretching { background-image: url("/img/skillcard2.png"); }
+.bgFitness { background-image: url("/img/skillcard3.png"); }
+.bgStep { background-image: url("/img/skillcard4.png"); }
+.bgBodyflex { background-image: url("/img/skillcard5.png"); }
+
 .newBodySection {
+  height: 510px;
   background: rgba(255, 255, 255, 1);
   border-radius: 30px;
-  padding: 60px;
+  padding: 30px;
   margin-top: 102px;
   margin-bottom: 40px;
   box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
@@ -72,15 +90,67 @@
   gap: 60px;
   align-items: center;
   justify-content: space-between;
+
+    overflow: visible;
+  position: relative;
+}
+
+.sectionClip {
+  position: absolute;
+  inset: 0; 
+  border-radius: 30px; 
+  overflow: hidden; 
+  pointer-events: none;
+  z-index: 1;
 }
 
 .newBodyContent {
   flex: 1;
   max-width: 600px;
+    position: relative;
+  z-index: 2; 
+}
+
+.newBodyImageWrapper {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+   align-self: flex-end;
+  margin-top: auto;
+    top: -140px; 
+    z-index: 3;
+}
+
+  .shoulderAccent {
+    position: absolute;
+    width: 122px;
+    height: 23px;
+    top: 140px;
+    right: 312px;
+    transform: rotate(-40deg);
+    z-index: 4;
+    pointer-events: none;
+}
+.runnerImage {
+  height: 590px;
+  object-fit: contain;
+}
+
+.arrowOverlay {
+width: 660px;
+    height: 749px;
+    position: absolute;
+    transform: rotate(-1deg);
+    right: 8px;
+    top: -8%;
 }
 
 .newBodyTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 60px;
   line-height: 100%;
@@ -96,7 +166,7 @@
 }
 
 .benefitItem {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 24px;
   line-height: 110%;
@@ -128,7 +198,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
 }
 
 .newBodyButton:hover:not(:disabled) {
@@ -136,27 +206,17 @@
   transform: translateY(-2px);
 }
 
+.newBodyButton.added:hover {
+  background-color: #dc3545;
+}
+
 .newBodyButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.newBodyImage {
-  flex: 1;
-  max-width: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.newBodyImage img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
 .sectionTitle {
-  font-family: Roboto;
+  font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 40px;
   line-height: 110.1%;
@@ -247,7 +307,7 @@
 }
 
 .reasonNumber {
-  font-family: Roboto;
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 75px;
   line-height: 135%;
@@ -256,7 +316,7 @@
 }
 
 .reasonText {
-  font-family: Roboto;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 24px;
   line-height: 110%;
@@ -289,7 +349,7 @@
 }
 
 .actionSection {
-  background: white;
+  background: #fff;
   border-radius: 24px;
   padding: 40px;
   margin-top: 40px;
@@ -323,7 +383,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
 }
 
 .actionButton:hover:not(:disabled) {
@@ -336,11 +396,244 @@
   cursor: wait;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1201px) {
+
   .header {
-    flex-direction: column;
-    padding: 30px;
+    height: 350px;
   }
+
+  .coursePage {
+   width: 1000px;;
+  }
+
+  .bgBodyflex,
+  .bgFitness,
+  .bgStep,
+  .bgStretching,
+  .bgYoga {
+   background-size: contain;
+  }
+  
+  .reasonsGrid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .reasonCard {
+    width: 319px;
+    height: 150px;
+  }
+
+  .reasonText {
+    font-size: 18px;
+  }
+
+  .arrowOverlay {
+    width: 625px;
+  }
+
+  .newBodyTitle {
+    margin-bottom: 22px;
+    font-size: 48px;
+  }
+
+  .benefitlist {
+    margin: 0
+  }
+}
+
+@media (max-width: 1050px) {
+
+  .header {
+   height: 300px;
+  }
+
+  .coursePage {
+    width: 910px;
+  }
+
+  .newBodySection {
+    overflow: hidden;
+  }
+
+  .headerBackground {
+    background-size: contain;
+  } 
+  
+  .newBodyImageWrapper {
+    top: 0;
+    margin-top: 30px;
+    align-self: center;
+  }
+
+  .reasonsGrid {
+    display: flex;
+  }
+
+    .reasonCard {
+    display: flex;
+    width: 289px;
+  }
+
+  .reasonNumber {
+    font-size: 70px;
+  }
+
+  .reasonText {
+    font-size: 17px;
+  }
+
+  .loginBtn {
+    width: 153px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  .newBodyTitle {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .newBodyButton {
+    height: 60px;
+    width: 320px;
+    font-size: 15px;
+  }
+
+  .newBodySection {
+    margin-top: 67px;
+  }
+
+  .benefitItem {
+    font-size: 20px;
+  }
+
+  .arrowOverlay {
+    width: 512px;
+    height: 654px;
+    opacity: 0.5;
+    right: 43px;
+    top: 15%;
+  }
+
+  .sectionTitle {
+    margin-bottom: 27px;
+    margin-top: 15px;
+  }
+
+
+}
+
+@media (max-width: 955px) {
+
+  .header {
+    height: 250px;
+  }
+
+  .coursePage {
+   width: 810px;
+    }
+
+    .reasonsGrid {
+      flex-direction: column;
+    }
+    .reasonCard {
+      width: 527px;
+    }
+
+    .reasonNumber {
+      font-size: 77px;
+    }
+
+    .sectionTitle {
+      font-size: 36px;
+    }
+
+    .reasonText {
+      font-size: 23px;
+    }
+
+    .reasonCard {
+      height: 131px;
+    }
+
+    .directionsContainer { 
+    display: flex;
+    flex-direction: column;
+    }
+
+    .arrowOverlay {
+      width: 472px;
+        height: 669px;
+        opacity: 0.5;
+        right: -6px;
+        top: 17%;
+    }
+
+}
+
+@media (max-width: 880px) {
+  .coursePage {
+      width: 673px;
+    }
+
+.newBodyImageWrapper {
+  top: 22px;
+  left: -24px;
+}
+
+.runnerImage {
+  height: 393px;
+}
+    .newBodyTitle {
+  font-size: 36px;
+    }
+
+    /* .reasonsGrid {
+      flex-direction: column;
+    } */
+    /* .reasonCard {
+      width: 527px;
+    } */
+
+    /* .reasonNumber {
+      font-size: 77px;
+    } */
+
+    .benefitItem {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .arrowOverlay {
+       width: 351px;
+        height: 924px;
+        transform: rotate(3deg);
+        right: 51px;
+        top: -11%;
+    }
+
+    .shoulderAccent {
+    width: 51px;
+    height: 13px;
+    top: 116px;
+    right: 260px;
+    transform: rotate(-46deg);
+    }
+
+    .newBodyButton {
+    width: 246px;
+    font-size: 18px;
+    }
+
+}
+
+@media (max-width: 768px) {
+.coursePage {
+    background-position: center;
+    background-size: contain;
+    width: 600px;
+}
 
   .title {
     font-size: 32px;
@@ -352,14 +645,25 @@
     margin: 20px 0 0 0;
   }
 
+  .headerBackground {
+    background-position: center;
+    background-size: contain;
+}
+      .bgYoga { background-image: url("/img/skillcard1.png"); }
+  .bgStretching { background-image: url("/img/skillcard2.png"); }
+  .bgFitness { background-image: url("/img/skillcard3.png"); } 
+  .bgStep { background-image: url("/img/skillcard4.png"); }
+  .bgBodyflex { background-image: url("/img/skillcard5.png"); }
+
   .metaInfo {
     gap: 16px;
   }
 
-  .reasonsGrid,
-  .directionsContainer {
-    grid-template-columns: 1fr;
+  .reasonsGrid {
+   display: flex;
+   flex-direction: column;
   }
+
 
   .actionSection {
     padding: 30px 20px;
@@ -368,4 +672,234 @@
   .actionTitle {
     font-size: 24px;
   }
+
+  .runnerImage {
+    height: 313px;
+  }
+
+  .arrowOverlay {
+   width: 300px;
+  height: 325px;
+  opacity: 0.5;
+  right: 20px;
+  top: 52%;
+  }
+
+  .newBodyImageWrapper {
+    top: 68px;
+   left: -1px;
+  }
+
+   .shoulderAccent {
+    width: 118px;
+    height: 12px;
+     top: 80px;
+    right: 162px;
+   }
+  
+  .shoulderAccent path {
+    stroke-width: 6 !important; 
+  }
+
+  .sectionTitle {
+   margin-top: 0;
+  }
+}
+
+@media (min-width: 427px) and (max-width: 767px) {
+   .coursePage {
+    width: 600px;
+    padding: 0 30px;
+  }
+
+  .header {
+    height: 170px;
+    }
+
+}
+
+
+@media (max-width: 426px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  .header {
+  height: 389px;
+}
+
+ .arrowOverlay {
+    position: absolute;
+    transform: rotate(0deg);
+     width: 393px;
+    height: 303px;
+    top: -87px;
+     left: 22px;
+  }
+
+  
+  .section {
+    display: flex;
+    flex-direction: column;
+    max-width: 399px;
+  }
+
+  .coursePage {
+    position: relative;
+     width: 382px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .section {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+  }
+
+  .newBodySection {
+    position: relative;
+    z-index: 0;
+    height: auto;
+    padding: 24px 16px;
+    margin-top: 150px;
+    margin-bottom: 40px;
+    flex-direction: column;
+    gap: 24px;
+    overflow: visible;
+    border-radius: 24px;
+    background: transparent; 
+    box-shadow: none;    
+  }
+
+  .newBodySection::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 24px;
+    box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+    z-index: 3; 
+    pointer-events: none;
+  }
+
+  .newBodyImageWrapper {
+     position: absolute;
+        right: -155px;
+        top: -241px;
+        width: auto;
+        height: auto;
+        z-index: 2;
+        margin: 0;
+        pointer-events: none;
+  }
+
+  .shoulderAccent {
+    position: absolute;
+    width: 35px;
+    height: 23px;
+   top: 70px;
+    right: 295px;
+    transform: rotate(-40deg);
+    z-index: 4;
+    pointer-events: none;
+}
+
+.shoulderAccent path {
+    stroke-width: 12 !important; 
+  }
+
+  .runnerImage {
+  width: 388px;
+   height: 328px;
+   object-fit: contain;
+   display: block;
+  }
+
+  .sectionClip {
+   position: absolute;
+    top: -50px; 
+    left: -50px; 
+    right: -50px; 
+    bottom: -50px; 
+    width: auto;   
+    height: auto;   
+    pointer-events: none;
+    z-index: 1; 
+    overflow: visible; 
+  }
+
+
+  .newBodyContent {
+    position: relative;
+    z-index: 4; 
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .newBodyTitle {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .benefitItem {
+    font-size: 16px;
+    padding-left: 20px;
+  }
+
+  .newBodyButton {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    display: block;
+    font-size: 16px;
+    padding: 14px 24px;
+    font-weight: 400;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+   margin-top: 30px;
+  }
+
+  .reasonsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 15px;
+  }
+
+  .reasonCard {
+  width: 343px;
+    height: 141px;
+    gap: 12px;
+  }
+
+  .reasonNumber {
+   font-size: 75px;
+  }
+
+  .reasonText {
+    font-size: 18px;
+    font-size: 18px;
+  }
+
+  .directionsContainer {
+    width: 100%;
+    padding: 20px 25px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .headerBackground {
+    border-radius: 45px;
+    background-position: center;
+    background-size: cover;
+  }
+
+    .bgYoga { background-image: url("/img/Maskgroup.png"); }
+  .bgStretching { background-image: url("/img/Maskgroup1.png"); }
+  .bgFitness { background-image: url("/img/Maskgroup2.png"); } 
+  .bgStep { background-image: url("/img/Maskgroup3.png"); }
+  .bgBodyflex { background-image: url("/img/Maskgroup4.png"); }
 }

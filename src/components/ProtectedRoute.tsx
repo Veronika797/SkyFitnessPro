@@ -12,7 +12,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
   const location = useLocation();
 
   if (isLoading) {
-    return <div className="loading">Загрузка...</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <div className="spinner" />
+        <p>Загрузка...</p>
+      </div>
+    );
   }
 
   if (requireAuth && !user) {

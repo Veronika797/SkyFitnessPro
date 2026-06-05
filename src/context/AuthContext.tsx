@@ -2,17 +2,26 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { authService } from "@/api/authService";
 import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { getErrorMessage, isUnauthorizedError } from "@/utils/errorUtils";
+import { getErrorMessage } from "@/utils/errorUtils";
+import axios from "axios";
+import { CourseProgress } from "@/types";
+import { globalCache } from "@/api/globalCache";
+import { progressCache } from "@/api/progressCache";
+import { clearProgressCaches } from "@/hooks/useCourseProgress";
+import { getAllCourses } from "@/api/courseService";
 
 export interface User {
+  _id: string;
   email: string;
   selectedCourses: string[];
+  courseProgress?: CourseProgress[];
 }
 
 export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   error: string | null;
+  clearError: () => void;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -28,7 +37,7 @@ export interface AuthContextType {
   setReturnUrl: (url: string) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -42,6 +51,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const setReturnUrl = (url: string) => {
     setReturnTo(url);
   };
+
+  useEffect(() => {
+    const preloadCourses = async () => {
+      try {
+        await getAllCourses();
+      } catch (err) {
+        setError(getErrorMessage(err));
+      }
+    };
+
+    preloadCourses();
+  }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -83,20 +104,42 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     authService.logout();
     setUser(null);
+
+    globalCache.clear();
+    progressCache.clear();
+    clearProgressCaches();
+
     navigate("/");
   };
 
+  const clearError = () => setError(null);
+
   const fetchUser = async () => {
     try {
-      const response = await axiosInstance.get<User>("/users/me");
-      setUser(response.data);
+      const response = await axiosInstance.get<{ user: User }>("/users/me");
+      const userData = response.data.user;
+
+      setUser(userData);
       setError(null);
-    } catch (err) {
-      if (isUnauthorizedError(err)) {
+
+      globalCache.clearKey("userCourses");
+      globalCache.clearKey("userCoursesList");
+      globalCache.clearKey("userCourseIds");
+      clearProgressCaches();
+    } catch (err: unknown) {
+      let status: number | undefined;
+      let serverMessage: string = getErrorMessage(err);
+
+      if (axios.isAxiosError<{ message?: string }>(err) && err.response) {
+        status = err.response.status;
+        serverMessage = err.response.data?.message || getErrorMessage(err);
+      }
+
+      if (status === 401 || status === 400) {
         authService.logout();
         setUser(null);
       } else {
-        setError(getErrorMessage(err));
+        setError(serverMessage);
       }
     } finally {
       setIsLoading(false);
@@ -154,6 +197,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     login,
     register,
     logout,
+    clearError,
     fetchUser,
     addCourseLocally,
     removeCourseLocally,

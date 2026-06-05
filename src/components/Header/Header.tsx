@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import styles from "./Header.module.css";
+import logoMobile from "@/assets/logoMobile.png";
+import logoDesktop from "@/assets/logo.png";
+import profileIcon from "@/assets/profile.png";
 
 interface HeaderProps {
   onLoginClick: () => void;
@@ -14,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const isMobile = useIsMobile(400);
   const showTagline = location.pathname === "/";
 
   const handleProfileClick = () => {
@@ -35,6 +39,8 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
   const handleLogoClick = () => {
     navigate("/");
   };
+
+  const logoSrc = isMobile ? logoMobile : logoDesktop;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,12 +64,8 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
   return (
     <header className={styles.header}>
       <div className={styles.logoBlock} onClick={handleLogoClick}>
-        <div className={styles.logoTop}>
-          <img src="/img/Logo.png" alt="logo" className={styles.logoIcon} />
-          <span className="logoSvg">
-            <img src="/img/SkyFitnessPro.svg" alt="logo" />
-          </span>
-        </div>
+        <img src={logoSrc} alt="SkyFitnessPro" className={styles.logoImage} />
+
         {showTagline && <p className={styles.tagline}>Онлайн-тренировки для занятий дома</p>}
       </div>
       <div className={styles.headerActions}>
@@ -74,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, onRegisterClick: _
               onClick={toggleDropdown}
               aria-label="Открыть профиль"
             >
-              <img src="/img/profile.png" alt="user" />
+              <img src={profileIcon} alt="user" />
 
               <span className={styles.profileName}>{getUserName()}</span>
               <svg

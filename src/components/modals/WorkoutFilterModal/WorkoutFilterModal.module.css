@@ -26,12 +26,11 @@
 
 .modalHeader {
   padding: 24px 24px 16px;
-  border-bottom: 1px solid #f0f0f0;
   position: relative;
 }
 
 .modalTitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 24px;
   color: #000;
@@ -39,7 +38,7 @@
 }
 
 .modalSubtitle {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-size: 14px;
   color: #646464;
   margin: 0;
@@ -78,7 +77,7 @@
   padding: 12px 16px;
   border: 1px solid #d0cece;
   border-radius: 12px;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s;
@@ -89,6 +88,7 @@
 }
 
 .workoutList {
+  overflow: hidden;
   padding: 16px 20px;
 }
 
@@ -97,7 +97,7 @@
   color: #888;
   font-style: italic;
   margin: 20px 0;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
 }
 
 .workoutGroup {
@@ -133,7 +133,7 @@
 }
 
 .workoutName {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 500;
   font-size: 16px;
   color: #000;
@@ -144,7 +144,6 @@
   padding: 16px 24px 24px;
   text-align: center;
   background: #fff;
-  border-top: 1px solid #f0f0f0;
 }
 
 .startButton {
@@ -152,8 +151,8 @@
   max-width: 320px;
   padding: 14px 24px;
   background-color: rgba(188, 236, 48, 1);
-  color: white;
-  font-family: "Roboto", sans-serif;
+  color: #000;
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 16px;
   border: none;
@@ -173,8 +172,14 @@
   transform: translateY(0);
 }
 
+.startButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #ccc;
+}
+
 .exerciseCount {
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-size: 14px;
   color: #646464;
 }
@@ -204,7 +209,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
+  color: #fff;
   font-weight: bold;
   font-size: 14px;
 }
@@ -247,7 +252,7 @@
 .checkboxInput:checked .checkboxVisual::after {
   content: "✓";
   font-size: 14px;
-  color: white;
+  color: #fff;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -279,4 +284,28 @@
 .arrowIcon {
   color: #646464;
   flex-shrink: 0;
+}
+
+@media (max-width: 426px) {
+ 
+
+  .closeButton {
+    top: 4px;
+    right: 4px;
+  }
+
+  .startButton {
+    border-radius: 45px;
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+  .modalHeader {
+  padding: 22px;
+}
+
+.searchBox {
+  padding: 0 24px;
+  border-bottom: none;
+}
 }

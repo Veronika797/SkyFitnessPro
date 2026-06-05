@@ -12,8 +12,7 @@
 }
 
 .heroTitle {
-  min-width: 819px;
-  font-family: "Roboto";
+font-family: "Roboto", monospace;
   font-weight: 600;
   font-size: 60px;
   line-height: 100%;
@@ -23,12 +22,11 @@
 
 .heroBadge {
   display: flex;
-  min-width: 288px;
   height: 120px;
   display: flex;
   border-radius: 5px;
   gap: 10px;
-  font-family: "Roboto", sans-serif;
+font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 32px;
   line-height: 110%;
@@ -51,170 +49,12 @@
   border-right: 19px solid transparent;
   border-top: 11px solid rgba(188, 236, 48, 1);
 }
-/* 
-.cardsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.cardWrapper {
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.cardWrapper:hover {
-  transform: translateY(-8px);
-}
-
-.card {
-  background: #fff;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  cursor: pointer;
-  height: 100%;
-}
-
-.cardWrapper:hover .card {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.cardImage {
-  width: 100%;
-  height: 320px;
-  object-fit: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 24px;
-  border-radius: 24px;
-}
-
-.cardAddBtn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  background: #fff;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  z-index: 10;
-}
-
-.cardAddBtn:hover {
-  background: #7fff00;
-  color: #fff;
-  transform: scale(1.1);
-}
-
-.cardAddBtn:active {
-  transform: scale(0.95);
-}
-
-.cardContent {
-  padding: 24px;
-}
-
-.cardTitle {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #000;
-}
-
-.cardInfo {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.cardInfoItem {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  color: #666;
-  background: rgba(247, 247, 247, 1);
-  padding: 6px 12px;
-  border-radius: 50px;
-}
-
-.cardInfoItem svg {
-  width: 16px;
-  height: 16px;
-}
-
-.difficulty {
-  display: flex;
-  width: 129px;
-  background: rgba(247, 247, 247, 1);
-  border-radius: 50px;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.difficultyLabel {
-  font-size: 14px;
-  color: #666;
-}
-
-.difficultyBar {
-  display: flex;
-  gap: 3px;
-  align-items: flex-end;
-}
-
-.difficultyBar span {
-  width: 4px;
-  background: linear-gradient(to top, #00d9ff, #7fff00);
-  border-radius: 2px;
-}
-
-.difficultyBar span:nth-child(1) {
-  height: 12px;
-}
-.difficultyBar span:nth-child(2) {
-  height: 16px;
-}
-.difficultyBar span:nth-child(3) {
-  height: 20px;
-}
-.difficultyBar span:nth-child(4) {
-  height: 12px;
-}
-.difficultyBar span:nth-child(5) {
-  height: 8px;
-}
 
 .backToTop {
   display: block;
   margin: 40px auto 60px;
-  background-color: #7fff00;
-  color: #1a1a1a;
+  background-color: rgba(188, 236, 48, 1);
+  color: rgba(0, 0, 0, 1);
   border: none;
   padding: 14px 36px;
   border-radius: 24px;
@@ -230,47 +70,25 @@
   box-shadow: 0 4px 12px rgba(127, 255, 0, 0.3);
 }
 
-.bgYoga {
-  background-color: #ffc107;
-}
-.bgStretching {
-  background-color: #2196f3;
-}
-.bgFitness {
-  background-color: #ff9800;
-}
-.bgStep {
-  background-color: #ff7961;
-}
-.bgBodyflex {
-  background-color: #9c27b0;
-} */
-
 @media (max-width: 1024px) {
-  /* .cardsGrid {
+  .cardsGrid {
     grid-template-columns: repeat(2, 1fr);
-  } */
+  }
   .heroTitle {
-    font-weight: 400;
-    font-size: 51px;
+       font-weight: 500;
+    font-size: 48px;
     line-height: 80%;
     letter-spacing: 1px;
   }
-}
-
-@media (max-width: 768px) {
-  .heroBadge {
-    line-height: 80%;
-  }
-  .heroTitle {
-    font-weight: 400;
-    font-size: 45px;
-    line-height: 74%;
-    letter-spacing: 0.5px;
+    .heroBadge {
+   font-size: 24px;
   }
 }
 
+
+
 @media (max-width: 768px) {
+
   .hero {
     padding: 20px;
   }
@@ -278,36 +96,86 @@
     flex-direction: column;
   }
   .heroTitle {
-    font-size: 32px;
+    font-size: 42px;
+    display: contents;
   }
   .heroBadge {
-    font-size: 16px;
-    padding: 16px 20px;
+    display: none;
   }
-  /* .cardsGrid {
+  .cardsGrid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
   .cardImage {
     height: 280px;
-  } */
-}
+  } 
+
 .backToTop {
-  display: block;
-  margin: 40px auto 60px;
-  background-color: #7fff00;
-  color: #1a1a1a;
-  border: none;
-  padding: 14px 36px;
-  border-radius: 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    position: relative;
+    left: 50%;
+    font-weight: 400;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+}
 }
 
-.backToTop:hover {
-  background-color: #6fd600;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(127, 255, 0, 0.3);
+@media (max-width: 769px) and (min-width: 528px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardAddBtn {
+    top: 3%;
+    right: 3%;
+  }
+}
+
+@media (max-width: 450px) {
+  .heroTitle {
+    font-weight: 500;
+    font-size: 32px;
+  }
+
+  .heroContent {
+    margin-bottom: 30px;
+  }
+
+  .hero {
+    padding: 20px;
+    padding-top: 0;
+  }
+
+  .cardContent {
+    padding: 18px;
+  }
+
+  .cardTitle {
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .cardInfo {
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .cardGrid {
+    margin-bottom: 20px;
+  }
+
+
+
+  .loginBtn {
+        width: 83px;
+}
+}
+
+@media (min-width: 427px) and (max-width: 767px) {
+  
+.hero {
+    width: 600px;
+    padding: 0 30px;
+}
+
 }

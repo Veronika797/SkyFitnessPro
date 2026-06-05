@@ -18,7 +18,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "vite/client"],
+   "types": ["node", "vite/client", "vitest/globals","@testing-library/jest-dom"],
 
     "paths": {
       "@/*": ["./src/*"],
@@ -32,6 +32,6 @@
     
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,6 @@
 .authPage {
+  width: 100%;
+    height: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -49,7 +51,7 @@
 
 .logoText {
   font-weight: 500;
-  font-family: Robobo;
+ font-family: "Roboto", monospace;
   font-size: 30px;
 }
 
@@ -114,7 +116,7 @@
   border-radius: 46px;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: Roboto;
+ font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 18px;
   line-height: 110%;
@@ -130,6 +132,7 @@
   background: transparent;
   width: 280px;
   height: 52px;
+  font-size: 18px;
   opacity: 1;
   cursor: pointer;
   border-radius: 46px;
@@ -137,7 +140,7 @@
 }
 
 .btnReg a {
-  font-family: Roboto;
+  font-family: "Roboto", monospace;
   font-weight: 400;
   font-size: 18px;
   text-decoration-line: none;
@@ -155,3 +158,12 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+@media (max-width: 600px) {
+  .authPage {
+      width: 100%;
+    height: 100%;
+  }
+
+}
+  
